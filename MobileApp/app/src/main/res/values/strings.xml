@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">EventNotifier</string>
+    <string name="server_name">localhost</string>
 </resources>

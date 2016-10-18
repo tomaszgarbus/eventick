@@ -3,12 +3,18 @@ package hackaton.waw.eventnotifier;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.net.Uri;
 import android.os.IBinder;
+import android.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.TextView;
 
-public class MainActivity extends AppCompatActivity {
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.OnMapReadyCallback;
+
+public class MainActivity extends AppCompatActivity implements EventDetailsFragment.OnFragmentInteractionListener {
 
     private Intent service;
 
@@ -33,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
 
             }
         }, BIND_IMPORTANT);
+        getFragmentManager().beginTransaction().add(R.id.activity_main, (Fragment) new EventDetailsFragment()).commit();
     }
 
     /**
@@ -44,5 +51,10 @@ public class MainActivity extends AppCompatActivity {
     // Used to load the 'native-lib' library on application startup.
     static {
         System.loadLibrary("native-lib");
+    }
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+
     }
 }

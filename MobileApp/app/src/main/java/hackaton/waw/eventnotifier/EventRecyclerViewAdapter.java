@@ -6,23 +6,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import hackaton.waw.eventnotifier.EventFragment.OnListFragmentInteractionListener;
-import hackaton.waw.eventnotifier.dummy.DummyContent.DummyItem;
+import hackaton.waw.eventnotifier.EventListFragment.OnListFragmentInteractionListener;
 
 import java.util.List;
 
-/**
- * {@link RecyclerView.Adapter} that can display a {@link DummyItem} and makes a call to the
- * specified {@link OnListFragmentInteractionListener}.
- * TODO: Replace the implementation with code for your data type.
- */
 public class EventRecyclerViewAdapter extends RecyclerView.Adapter<EventRecyclerViewAdapter.ViewHolder> {
 
-    private final List<DummyItem> mValues;
+    private final List<Event> events;
     private final OnListFragmentInteractionListener mListener;
 
-    public EventRecyclerViewAdapter(List<DummyItem> items, OnListFragmentInteractionListener listener) {
-        mValues = items;
+    public EventRecyclerViewAdapter(List<Event> items, OnListFragmentInteractionListener listener) {
+        events = items;
         mListener = listener;
     }
 
@@ -35,9 +29,9 @@ public class EventRecyclerViewAdapter extends RecyclerView.Adapter<EventRecycler
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        holder.mItem = mValues.get(position);
-        holder.mIdView.setText(mValues.get(position).id);
-        holder.mContentView.setText(mValues.get(position).content);
+        holder.mItem = events.get(position);
+        holder.mIdView.setText(events.get(position).getName());
+        holder.mContentView.setText(events.get(position).getLocation().getName());
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -53,14 +47,14 @@ public class EventRecyclerViewAdapter extends RecyclerView.Adapter<EventRecycler
 
     @Override
     public int getItemCount() {
-        return mValues.size();
+        return events.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
         public final TextView mIdView;
         public final TextView mContentView;
-        public DummyItem mItem;
+        public Event mItem;
 
         public ViewHolder(View view) {
             super(view);

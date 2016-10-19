@@ -3,6 +3,7 @@ package hackaton.waw.eventnotifier;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.hardware.camera2.params.Face;
 import android.net.Uri;
 import android.os.IBinder;
 import android.app.Fragment;
@@ -16,7 +17,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 
-public class MainActivity extends AppCompatActivity implements EventDetailsFragment.OnFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity {
 
     private Intent service;
 
@@ -26,9 +27,6 @@ public class MainActivity extends AppCompatActivity implements EventDetailsFragm
         FacebookSdk.sdkInitialize(getApplicationContext());
         setContentView(R.layout.activity_main);
 
-        // Example of a call to a native method
-        TextView tv = (TextView) findViewById(R.id.sample_text);
-        tv.setText(stringFromJNI());
         service = new Intent(this, EventQueryService.class);
 
         FacebookSdk.sdkInitialize(getApplicationContext());
@@ -46,12 +44,10 @@ public class MainActivity extends AppCompatActivity implements EventDetailsFragm
 
             }
         }, BIND_IMPORTANT);
+
+        getFragmentManager().beginTransaction().add(R.id.activity_main, MainFragment.newInstance()).commit();
     }
 
-    /**
-     * A native method that is implemented by the 'native-lib' native library,
-     * which is packaged with this application.
-     */
     public native String stringFromJNI();
 
     // Used to load the 'native-lib' library on application startup.
@@ -59,8 +55,4 @@ public class MainActivity extends AppCompatActivity implements EventDetailsFragm
         System.loadLibrary("native-lib");
     }
 
-    @Override
-    public void onFragmentInteraction(Uri uri) {
-
-    }
 }

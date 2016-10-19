@@ -78,7 +78,11 @@ public class EventQueryService extends Service {
     @Override
     public IBinder onBind(Intent intent) {
         Toast.makeText(getApplicationContext(), "Hi", Toast.LENGTH_SHORT).show();
-
+        Event sampleEvent = new Event();
+        sampleEvent.setName("EventName");
+        sampleEvent.setLocation(new Location());
+        sampleEvent.getLocation().setName("EventLocationName");
+        notifyAboutEvent(sampleEvent);
         return iBinder;
     }
 }

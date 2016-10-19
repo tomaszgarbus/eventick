@@ -2,6 +2,7 @@ package hackaton.waw.eventnotifier;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 

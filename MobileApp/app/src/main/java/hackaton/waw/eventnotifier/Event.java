@@ -1,5 +1,6 @@
 package hackaton.waw.eventnotifier;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 

@@ -23,6 +23,7 @@ public class MainActivity extends AppCompatActivity implements EventDetailsFragm
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        FacebookSdk.sdkInitialize(getApplicationContext());
         setContentView(R.layout.activity_main);
 
         // Example of a call to a native method

@@ -8,8 +8,8 @@
         <option name="gradleHome" value="$APPLICATION_HOME_DIR$/gradle/gradle-2.14.1" />
         <option name="modules">
           <set>
-            <option value="/media/DATA0/Common/Workspace/hackathonwaw/MobileApp" />
-            <option value="/media/DATA0/Common/Workspace/hackathonwaw/MobileApp/app" />
+            <option value="$USER_HOME$/Workspace/Hackathon/MobileApp" />
+            <option value="$USER_HOME$/Workspace/Hackathon/MobileApp/app" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

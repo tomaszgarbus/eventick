@@ -3,6 +3,8 @@
     <string name="server_name">localhost</string>
     <string name="facebook_app_id">1669615200018065</string>
 
+    <string name="new_event_in_warsaw">Nowe wydarzenie w Warszawie!</string>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

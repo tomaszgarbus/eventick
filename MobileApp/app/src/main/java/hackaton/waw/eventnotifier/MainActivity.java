@@ -46,7 +46,6 @@ public class MainActivity extends AppCompatActivity implements EventDetailsFragm
 
             }
         }, BIND_IMPORTANT);
-        getFragmentManager().beginTransaction().add(R.id.mapspace, (Fragment) EventDetailsFragment.newInstance(new Event())).commit();
     }
 
     /**

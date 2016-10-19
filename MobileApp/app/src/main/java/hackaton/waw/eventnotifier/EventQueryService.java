@@ -65,12 +65,20 @@ public class EventQueryService extends Service {
         }
     };
 
+    public void notifyAboutEvent(Event event) {
+        NotificationCompat.Builder notifBuilder = new NotificationCompat.Builder(this)
+                .setColor(Color.CYAN)
+                .setContentTitle(getString(R.string.new_event_in_warsaw))
+                .setContentText(event.getName())
+                .setSmallIcon(R.drawable.placeholder);
+        NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        manager.notify(0, notifBuilder.build());
+    }
+
     @Override
     public IBinder onBind(Intent intent) {
         Toast.makeText(getApplicationContext(), "Hi", Toast.LENGTH_SHORT).show();
-        NotificationCompat.Builder notifBuilder = new NotificationCompat.Builder(this).setColor(Color.CYAN).setContentTitle("Elo").setContentText("Siema").setSmallIcon(R.drawable.placeholder);
-        NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        manager.notify(0, notifBuilder.build());
+
         return iBinder;
     }
 }

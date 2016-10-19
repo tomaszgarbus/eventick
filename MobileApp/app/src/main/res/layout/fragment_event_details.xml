@@ -6,35 +6,42 @@
 
     <!-- TODO: Update blank fragment layout -->
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:id="@+id/linear_layout_event_details"
+        android:weightSum="5">
         <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:text="@string/hello_blank_fragment"
             android:id="@+id/event_name_text_view"/>
         <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:text="@string/hello_blank_fragment"
-            android:id="@+id/event_description_text_view"/>
+            android:id="@+id/event_description_text_view"
+            android:layout_below="@id/event_name_text_view"/>
         <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:text="@string/hello_blank_fragment"
-            android:id="@+id/event_location_text_view"/>
+            android:id="@+id/event_location_text_view"
+            android:layout_below="@id/event_description_text_view"/>
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
+        android:layout_marginTop="200px"
         android:layout_height="match_parent"
         android:weightSum="5">
+
         <fragment xmlns:android="http://schemas.android.com/apk/res/android"
             android:name="com.google.android.gms.maps.MapFragment"
             android:id="@+id/map"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            tools:layout="@layout/event_info_layout" />
     </LinearLayout>
 
 </FrameLayout>

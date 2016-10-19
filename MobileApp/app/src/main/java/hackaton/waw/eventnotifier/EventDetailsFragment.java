@@ -14,6 +14,9 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 
+import lombok.Getter;
+import lombok.Setter;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -23,8 +26,11 @@ import com.google.android.gms.maps.OnMapReadyCallback;
  * Use the {@link EventDetailsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class EventDetailsFragment extends Fragment {
+@Getter
+@Setter
+public class EventDetailsFragment extends Fragment implements OnMapReadyCallback {
     private OnFragmentInteractionListener mListener;
+    private Event event;
 
     public EventDetailsFragment() {
         // Required empty public constructor
@@ -34,13 +40,11 @@ public class EventDetailsFragment extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment EventDetailsFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static EventDetailsFragment newInstance(String param1, String param2) {
+    public static EventDetailsFragment newInstance(Event event) {
         EventDetailsFragment fragment = new EventDetailsFragment();
+        fragment.setEvent(event);
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
@@ -54,6 +58,11 @@ public class EventDetailsFragment extends Fragment {
         }
     }
 
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+
+    }
+
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -62,12 +71,7 @@ public class EventDetailsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_event_details, container, false);
         MapFragment mapFragment = (MapFragment) getChildFragmentManager()
                 .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(new OnMapReadyCallback() {
-            @Override
-            public void onMapReady(GoogleMap googleMap) {
-
-            }
-        });
+        mapFragment.getMapAsync(this);
         return view;
     }
 

@@ -9,7 +9,9 @@ import android.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.TextView;
+import com.facebook.FacebookSdk;
 
+import com.facebook.appevents.AppEventsLogger;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -27,6 +29,10 @@ public class MainActivity extends AppCompatActivity implements EventDetailsFragm
         TextView tv = (TextView) findViewById(R.id.sample_text);
         tv.setText(stringFromJNI());
         service = new Intent(this, EventQueryService.class);
+
+        FacebookSdk.sdkInitialize(getApplicationContext());
+        AppEventsLogger.activateApp(this);
+
         startService(service);
         bindService(service, new ServiceConnection() {
             @Override
@@ -39,7 +45,7 @@ public class MainActivity extends AppCompatActivity implements EventDetailsFragm
 
             }
         }, BIND_IMPORTANT);
-        getFragmentManager().beginTransaction().add(R.id.activity_main, (Fragment) new EventDetailsFragment()).commit();
+        getFragmentManager().beginTransaction().add(R.id.mapspace, (Fragment) EventDetailsFragment.newInstance(new Event())).commit();
     }
 
     /**

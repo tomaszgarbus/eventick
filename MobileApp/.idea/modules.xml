@@ -2,10 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$USER_HOME$/Workspace/Hackathon/MobileApp/MobileApp.iml" filepath="$USER_HOME$/Workspace/Hackathon/MobileApp/MobileApp.iml" />
-      <module fileurl="file:///media/DATA0/Common/Workspace/hackathonwaw/MobileApp/MobileApp.iml" filepath="/media/DATA0/Common/Workspace/hackathonwaw/MobileApp/MobileApp.iml" />
-      <module fileurl="file://$USER_HOME$/Workspace/Hackathon/MobileApp/app/app.iml" filepath="$USER_HOME$/Workspace/Hackathon/MobileApp/app/app.iml" />
-      <module fileurl="file:///media/DATA0/Common/Workspace/hackathonwaw/MobileApp/app/app.iml" filepath="/media/DATA0/Common/Workspace/hackathonwaw/MobileApp/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/MobileApp.iml" filepath="$PROJECT_DIR$/MobileApp.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>
 </project>

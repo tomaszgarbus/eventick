@@ -50,16 +50,16 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-    public native String stringFromJNI();
+    //public native String stringFromJNI();
 
     // Used to load the 'native-lib' library on application startup.
-    static {
-        System.loadLibrary("native-lib");
-    }
+    //static {
+    //    System.loadLibrary("native-lib");
+    //}
 
     @Override
     public void onListFragmentInteraction(Event item) {
-        getFragmentManager().beginTransaction().replace(R.id.activity_main, EventDetailsFragment.newInstance(item)).commit();
+        getFragmentManager().beginTransaction().replace(R.id.activity_main, EventDetailsFragment.newInstance(item)).addToBackStack(null).commit();
     }
 
     @Override

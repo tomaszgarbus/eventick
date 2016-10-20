@@ -15,24 +15,24 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/hello_blank_fragment"
-            android:id="@+id/event_name_text_view"/>
+            android:id="@+id/text_view_event_name"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/hello_blank_fragment"
-            android:id="@+id/event_description_text_view"
-            android:layout_below="@id/event_name_text_view"/>
+            android:id="@+id/text_view_event_description"
+            android:layout_below="@id/text_view_event_name"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/hello_blank_fragment"
-            android:id="@+id/event_location_text_view"
-            android:layout_below="@id/event_description_text_view"/>
+            android:id="@+id/text_view_event_location"
+            android:layout_below="@id/text_view_event_description"/>
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_marginTop="200px"
+        android:layout_marginTop="300px"
         android:layout_height="match_parent"
         android:weightSum="5">
 

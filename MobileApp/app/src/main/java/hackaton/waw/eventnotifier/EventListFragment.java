@@ -2,7 +2,7 @@ package hackaton.waw.eventnotifier;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,6 +14,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -54,10 +55,12 @@ public class EventListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_event_list, container, false);
+        View view = (RecyclerView) inflater.inflate(R.layout.fragment_event_list, container, false);
+        System.out.println("elo?");
 
         // Set the adapter
         if (view instanceof RecyclerView) {
+            System.out.println("jest okej");
             Context context = view.getContext();
             RecyclerView recyclerView = (RecyclerView) view;
             if (mColumnCount <= 1) {
@@ -65,7 +68,8 @@ public class EventListFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            recyclerView.setAdapter(new EventRecyclerViewAdapter(new ArrayList<Event>(), mListener)); //TODO: Sample list of events
+            List<Event> sampleEvents = Event.getSampleEvents();
+            recyclerView.setAdapter(new EventRecyclerViewAdapter(sampleEvents, mListener));
         }
         return view;
     }

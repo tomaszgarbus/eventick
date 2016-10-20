@@ -9,6 +9,7 @@ import android.support.annotation.RequiresApi;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.LocationSource;
@@ -25,12 +26,17 @@ import lombok.Setter;
 public class EventDetailsFragment extends Fragment implements OnMapReadyCallback {
     private OnFragmentInteractionListener mListener;
     private Event event;
+    private TextView eventNameTextView, eventDescriptionTextView, eventLocationTextView;
 
     public EventDetailsFragment() {
         // Required empty public constructor
     }
 
     public static EventDetailsFragment newInstance(Event event) {
+        if (event == null) {
+            throw new RuntimeException("Null event passed");
+        }
+
         EventDetailsFragment fragment = new EventDetailsFragment();
         fragment.setEvent(event);
         Bundle args = new Bundle();
@@ -57,6 +63,12 @@ public class EventDetailsFragment extends Fragment implements OnMapReadyCallback
                              Bundle savedInstanceState) {
         //Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_event_details, container, false);
+
+        eventNameTextView = (TextView) view.findViewById(R.id.text_view_event_name);
+        eventDescriptionTextView = (TextView) view.findViewById(R.id.text_view_event_description);
+        eventLocationTextView = (TextView) view.findViewById(R.id.text_view_event_location);
+        eventNameTextView.setText(event.getName());
+        eventLocationTextView.setText(event.getLocation().getName());
 
         //Prepare Google Map
         MapFragment mapFragment = (MapFragment) getChildFragmentManager()

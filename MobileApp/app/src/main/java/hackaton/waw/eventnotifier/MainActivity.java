@@ -17,7 +17,8 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity
+        implements EventListFragment.OnListFragmentInteractionListener, EventDetailsFragment.OnFragmentInteractionListener {
 
     private Intent service;
 
@@ -46,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
         }, BIND_IMPORTANT);
 
         getFragmentManager().beginTransaction().add(R.id.activity_main, MainFragment.newInstance()).commit();
+
     }
 
     public native String stringFromJNI();
@@ -55,4 +57,13 @@ public class MainActivity extends AppCompatActivity {
         System.loadLibrary("native-lib");
     }
 
+    @Override
+    public void onListFragmentInteraction(Event item) {
+        getFragmentManager().beginTransaction().replace(R.id.activity_main, EventDetailsFragment.newInstance(item)).commit();
+    }
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+
+    }
 }

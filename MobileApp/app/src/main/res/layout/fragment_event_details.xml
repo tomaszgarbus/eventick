@@ -5,43 +5,121 @@
     tools:context="hackaton.waw.eventnotifier.EventDetailsFragment">
 
     <!-- TODO: Update blank fragment layout -->
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:id="@+id/linear_layout_event_details"
-        android:weightSum="5">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/hello_blank_fragment"
-            android:id="@+id/text_view_event_name"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/hello_blank_fragment"
-            android:id="@+id/text_view_event_description"
-            android:layout_below="@id/text_view_event_name"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/hello_blank_fragment"
-            android:id="@+id/text_view_event_location"
-            android:layout_below="@id/text_view_event_description"/>
-    </LinearLayout>
-
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_marginTop="300px"
-        android:layout_height="match_parent"
-        android:weightSum="5">
+        android:layout_height="match_parent">
 
-        <fragment xmlns:android="http://schemas.android.com/apk/res/android"
-            android:name="com.google.android.gms.maps.MapFragment"
-            android:id="@+id/map"
+
+
+        <LinearLayout
+            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            tools:layout="@layout/event_info_layout" />
-    </LinearLayout>
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:id="@+id/linear_layout_event_details"
+                android:weightSum="5">
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="200dp"
+                    android:id="@+id/event_details_header">
+                    <ImageView
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:background="@drawable/cze"
+                        android:layout_alignParentTop="true"
+                        android:scaleType="centerCrop"/>
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_alignParentTop="true"
+                        android:background="@drawable/gradient"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:textColor="#ffffff"
+                        android:textSize="20dp"
+                        android:layout_margin="@dimen/text_margin"
+                        android:text="@string/hello_blank_fragment"
+                        android:id="@+id/text_view_event_name"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:layout_alignParentRight="true"
+                        android:textColor="#ffffff"
+                        android:textSize="15dp"
+                        android:layout_margin="@dimen/text_margin"
+                        android:text="@string/hello_blank_fragment"
+                        android:id="@+id/text_view_event_location"/>
+
+                </RelativeLayout>
+                <TextView
+                    android:layout_margin="@dimen/text_margin"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/hello_blank_fragment"
+                    android:id="@+id/text_view_event_description"
+                    android:layout_below="@id/event_details_header"/>
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <ImageButton
+                        android:text="Button"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/like"
+                        android:layout_width="0dp"
+                        android:src="@drawable/nice"
+                        android:layout_weight="1"/>
+
+                    <ImageButton
+                        android:text="Button"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/dislike"
+                        android:src="@drawable/sad"
+                        android:layout_weight="1"/>
+                    <ImageButton
+                        android:text="Button"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/share"
+                        android:src="@drawable/share"
+                        android:layout_weight="1"/>
+                    <ImageButton
+                        android:text="Button"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/participate"
+                        android:src="@drawable/check"
+                        android:layout_weight="1"/>
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_marginTop="300px"
+                android:minHeight="300dp"
+                android:layout_height="match_parent"
+                android:weightSum="5">
+
+                <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:name="com.google.android.gms.maps.MapFragment"
+                    android:id="@+id/map"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    tools:layout="@layout/event_info_layout" />
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
 
 </FrameLayout>

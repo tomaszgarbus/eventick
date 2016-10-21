@@ -23,7 +23,7 @@ public class EventListFragment extends Fragment {
     // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
     // TODO: Customize parameters
-    private int mColumnCount = 2;
+    private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
 
     /**
@@ -56,11 +56,9 @@ public class EventListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = (RecyclerView) inflater.inflate(R.layout.fragment_event_list, container, false);
-        System.out.println("elo?");
 
         // Set the adapter
         if (view instanceof RecyclerView) {
-            System.out.println("jest okej");
             Context context = view.getContext();
             RecyclerView recyclerView = (RecyclerView) view;
             if (mColumnCount <= 1) {

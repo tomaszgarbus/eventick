@@ -1,69 +1,115 @@
 package hackaton.waw.eventnotifier;
 
-import android.content.ComponentName;
-import android.content.Intent;
-import android.content.ServiceConnection;
-import android.hardware.camera2.params.Face;
 import android.net.Uri;
-import android.os.IBinder;
-import android.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.widget.TextView;
+import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.WindowManager;
+
 import com.facebook.FacebookSdk;
 
-import com.facebook.appevents.AppEventsLogger;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapFragment;
-import com.google.android.gms.maps.OnMapReadyCallback;
-
 public class MainActivity extends AppCompatActivity
-        implements EventListFragment.OnListFragmentInteractionListener, EventDetailsFragment.OnFragmentInteractionListener {
+        implements NavigationView.OnNavigationItemSelectedListener, EventListFragment.OnListFragmentInteractionListener, EventDetailsFragment.OnFragmentInteractionListener {
 
-    private Intent service;
+    protected void setStatusBarTranslucent(boolean makeTranslucent) {
+        if (makeTranslucent) {
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        } else {
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        FacebookSdk.sdkInitialize(getApplicationContext());
+        FacebookSdk.sdkInitialize(this);
         setContentView(R.layout.activity_main);
+//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+//        setSupportActionBar(toolbar);
 
-        service = new Intent(this, EventQueryService.class);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 
-        FacebookSdk.sdkInitialize(getApplicationContext());
-        AppEventsLogger.activateApp(this);
+//        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+//                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+//        drawer.addDrawerListener(toggle);
+//        toggle.syncState();
 
-        startService(service);
-        bindService(service, new ServiceConnection() {
-            @Override
-            public void onServiceConnected(ComponentName name, IBinder service) {
+        getFragmentManager().beginTransaction().replace(R.id.content_main, MainFragment.newInstance()).commit();
 
-            }
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
 
-            @Override
-            public void onServiceDisconnected(ComponentName name) {
-
-            }
-        }, BIND_IMPORTANT);
-
-        getFragmentManager().beginTransaction().add(R.id.activity_main, MainFragment.newInstance()).commit();
-
+        setStatusBarTranslucent(true);
     }
 
-    //public native String stringFromJNI();
-
-    // Used to load the 'native-lib' library on application startup.
-    //static {
-    //    System.loadLibrary("native-lib");
-    //}
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
 
     @Override
-    public void onListFragmentInteraction(Event item) {
-        getFragmentManager().beginTransaction().replace(R.id.activity_main, EventDetailsFragment.newInstance(item)).addToBackStack(null).commit();
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
+
+        if (id == R.id.nav_event_list) {
+            loadMainFragment();
+        } else if (id == R.id.nav_user_info) {
+            loadUserInfoFragment();
+        }
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
+    }
+
+    public void loadMainFragment() {
+        getFragmentManager().beginTransaction().replace(R.id.content_main, MainFragment.newInstance()).commit();
+    }
+
+    public void loadUserInfoFragment() {
+        getFragmentManager().beginTransaction().replace(R.id.content_main, UserInfoFragment.newInstance()).commit();
     }
 
     @Override
     public void onFragmentInteraction(Uri uri) {
 
+    }
+
+    @Override
+    public void onListFragmentInteraction(Event item) {
+        getFragmentManager().beginTransaction().replace(R.id.content_main, EventDetailsFragment.newInstance(item)).addToBackStack(null).commit();
     }
 }

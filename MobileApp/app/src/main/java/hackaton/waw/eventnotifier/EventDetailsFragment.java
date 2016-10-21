@@ -68,6 +68,7 @@ public class EventDetailsFragment extends Fragment implements OnMapReadyCallback
         eventDescriptionTextView = (TextView) view.findViewById(R.id.text_view_event_description);
         eventLocationTextView = (TextView) view.findViewById(R.id.text_view_event_location);
         eventNameTextView.setText(event.getName());
+        eventDescriptionTextView.setText(event.getDescription());
         eventLocationTextView.setText(event.getLocation().getName());
 
         //Prepare Google Map

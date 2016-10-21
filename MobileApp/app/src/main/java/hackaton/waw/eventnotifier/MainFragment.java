@@ -48,7 +48,8 @@ public class MainFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_main, container, false);
 
 
-        getChildFragmentManager().beginTransaction().add(R.id.include_event_list, EventListFragment.newInstance(2)).commit();
+        getChildFragmentManager().beginTransaction().replace(R.id.include_event_list, EventListFragment.newInstance(1)).commit();
+        System.out.println("jest fajnie");
         return view;
     }
 

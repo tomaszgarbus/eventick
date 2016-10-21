@@ -9,6 +9,7 @@ import android.support.annotation.RequiresApi;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.GoogleMap;
@@ -27,6 +28,7 @@ public class EventDetailsFragment extends Fragment implements OnMapReadyCallback
     private OnFragmentInteractionListener mListener;
     private Event event;
     private TextView eventNameTextView, eventDescriptionTextView, eventLocationTextView;
+    private ImageView eventPictureImageView;
 
     public EventDetailsFragment() {
         // Required empty public constructor
@@ -67,9 +69,13 @@ public class EventDetailsFragment extends Fragment implements OnMapReadyCallback
         eventNameTextView = (TextView) view.findViewById(R.id.text_view_event_name);
         eventDescriptionTextView = (TextView) view.findViewById(R.id.text_view_event_description);
         eventLocationTextView = (TextView) view.findViewById(R.id.text_view_event_location);
+        eventPictureImageView = (ImageView) view.findViewById(R.id.image_view_event_pictue);
         eventNameTextView.setText(event.getName());
         eventDescriptionTextView.setText(event.getDescription());
         eventLocationTextView.setText(event.getLocation().getName());
+        if (event.getPicture() != null) {
+            eventPictureImageView.setImageBitmap(event.getPicture());
+        }
 
         //Prepare Google Map
         MapFragment mapFragment = (MapFragment) getChildFragmentManager()

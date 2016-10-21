@@ -27,6 +27,7 @@
                     android:layout_height="200dp"
                     android:id="@+id/event_details_header">
                     <ImageView
+                        android:id="@+id/image_view_event_pictue"
                         android:layout_width="fill_parent"
                         android:layout_height="fill_parent"
                         android:background="@drawable/cze"

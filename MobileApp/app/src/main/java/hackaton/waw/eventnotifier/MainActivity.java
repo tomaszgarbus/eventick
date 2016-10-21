@@ -1,19 +1,33 @@
 package hackaton.waw.eventnotifier;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.telecom.Call;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.WindowManager;
 
+import com.facebook.AccessToken;
+import com.facebook.AccessTokenTracker;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
+import com.facebook.appevents.AppEventsLogger;
+import com.facebook.login.LoginManager;
+import com.facebook.login.LoginResult;
+
+import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, EventListFragment.OnListFragmentInteractionListener, EventDetailsFragment.OnFragmentInteractionListener {
+
+    private CallbackManager callbackManager;
 
     protected void setStatusBarTranslucent(boolean makeTranslucent) {
         if (makeTranslucent) {
@@ -27,6 +41,10 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         FacebookSdk.sdkInitialize(this);
+        callbackManager = CallbackManager.Factory.create();
+        AppEventsLogger.activateApp(this);
+        LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("public_profile"));
+
         setContentView(R.layout.activity_main);
 //        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 //        setSupportActionBar(toolbar);
@@ -111,5 +129,11 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onListFragmentInteraction(Event item) {
         getFragmentManager().beginTransaction().replace(R.id.content_main, EventDetailsFragment.newInstance(item)).addToBackStack(null).commit();
+    }
+
+    @Override
+    protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        callbackManager.onActivityResult(requestCode, resultCode, data);
     }
 }

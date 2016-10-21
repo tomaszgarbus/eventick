@@ -1,5 +1,12 @@
 package hackaton.waw.eventnotifier;
 
+import com.facebook.AccessToken;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.HttpMethod;
+
+import org.json.JSONException;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,6 +24,31 @@ public class Event {
     private String name;
     private String description;
     private Location location;
+
+    public static Event getFacebookEvent(String eventId) {
+        final Event event = new Event();
+        GraphRequest request = new GraphRequest(AccessToken.getCurrentAccessToken(),
+                "/" + eventId,
+                null,
+                HttpMethod.GET,
+                new GraphRequest.Callback() {
+
+                    @Override
+                    public void onCompleted(GraphResponse response) {
+                        try {
+                            event.setName(response.getJSONObject().getString("name"));
+                            event.setDescription(response.getJSONObject().getString("description"));
+                            event.setLocation(new Location());
+                            event.getLocation().setName(response.getJSONObject().getJSONObject("place").getString("name"));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        System.out.println(response.getJSONObject().toString());
+                    }
+                });
+        request.executeAsync();
+        return event;
+    }
 
     public static List<Event> getSampleEvents() {
         List<Event> ret = new ArrayList<>();
@@ -43,10 +75,12 @@ public class Event {
         event3.setDescription("yo");
         event3.setLocation(new Location());
         event3.getLocation().setName("Radom");
+        //Event event4 = getFacebookEvent("138758676532078");
         ret.add(event0);
         ret.add(event1);
         ret.add(event2);
         ret.add(event3);
+        //ret.add(event4);
         return ret;
     }
 }

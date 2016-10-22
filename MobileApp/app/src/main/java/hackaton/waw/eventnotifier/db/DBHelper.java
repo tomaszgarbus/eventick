@@ -12,6 +12,7 @@ import java.sql.SQLException;
 
 import hackaton.waw.eventnotifier.R;
 import hackaton.waw.eventnotifier.event.Event;
+import hackaton.waw.eventnotifier.location.Location;
 
 /**
  * Created by slejer on 22.10.16.
@@ -26,6 +27,7 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
      * The data access object used to interact with the Sqlite database to do C.R.U.D operations.
      */
     private Dao<Event, Long> todoDao;
+    private Dao<Location, Long> locDao;
 
     public DBHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION,
@@ -75,5 +77,12 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
             todoDao = getDao(Event.class);
         }
         return todoDao;
+    }
+
+    public Dao<Location, Long> getLocationDao() throws SQLException {
+        if(locDao == null) {
+            locDao = getDao(Location.class);
+        }
+        return locDao;
     }
 }

@@ -11,6 +11,7 @@ import com.facebook.HttpMethod;
 import com.google.android.gms.maps.model.LatLng;
 
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -70,15 +71,25 @@ public class EventManager {
                         @Override
                         public void onCompleted(GraphResponse response) {
                             try {
-                                response.getJSONObject().
-                                event.setName(response.getJSONObject().getString("name"));
-                                event.setDescription(response.getJSONObject().getString("description"));
-                                event.setPicture(bitmapFromCoverSource(response.getJSONObject().getJSONObject("cover").getString("source")));
+                                JSONObject json = response.getJSONObject();
+                                if (json.has("name")) {
+                                    event.setName(json.getString("name"));
+                                }
+                                if (json.has("description")) {
+                                    event.setDescription(json.getString("description"));
+                                }
+                                if (json.has("cover")) {
+                                    event.setPicture(bitmapFromCoverSource(json.getJSONObject("cover").getString("source")));
+                                }
+                                if (json.has("place")) {
+                                    event.getLocation().setName(json.getJSONObject("place").getString("name"));
+                                    if (json.getJSONObject("place").has("latitude") && json.getJSONObject("place").has("longitude")) {
+                                        double latitude = json.getJSONObject("place").getJSONObject("location").getDouble("latitude");
+                                        double longitude = json.getJSONObject("place").getJSONObject("location").getDouble("longitude");
+                                        event.getLocation().setLatLng(new LatLng(latitude, longitude));
+                                    }
+                                }
 
-                                event.getLocation().setName(response.getJSONObject().getJSONObject("place").getString("name"));
-                                double latitude = response.getJSONObject().getJSONObject("place").getJSONObject("location").getDouble("latitude");
-                                double longitude = response.getJSONObject().getJSONObject("place").getJSONObject("location").getDouble("longitude");
-                                event.getLocation().setLatLng(new LatLng(latitude, longitude));
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }

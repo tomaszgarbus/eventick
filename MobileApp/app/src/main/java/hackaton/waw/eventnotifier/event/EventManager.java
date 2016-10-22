@@ -81,7 +81,7 @@ public class EventManager {
                                     event.setPicture(bitmapFromCoverSource(json.getJSONObject("cover").getString("source")));
                                 }
                                 if (json.has("start_time")) {
-                                    System.out.print(event.setPicture(bitmapFromCoverSource(json.getString("start_time"))));
+                                    System.out.print(json.getString("start_time"));
                                 }
                                 if (json.has("place")) {
                                     event.getLocation().setName(json.getJSONObject("place").getString("name"));

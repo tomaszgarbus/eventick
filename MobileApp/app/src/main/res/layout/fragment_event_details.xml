@@ -59,13 +59,6 @@
                         android:id="@+id/text_view_event_location"/>
 
                 </RelativeLayout>
-                <TextView
-                    android:layout_margin="@dimen/text_margin"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/hello_blank_fragment"
-                    android:id="@+id/text_view_event_description"
-                    android:layout_below="@id/event_details_header"/>
 
                 <LinearLayout
                     android:orientation="horizontal"
@@ -78,6 +71,7 @@
                         android:id="@+id/like"
                         android:layout_width="0dp"
                         android:src="@drawable/nice"
+                        android:backgroundTint="@color/button_bg"
                         android:layout_weight="1"/>
 
                     <ImageButton
@@ -86,6 +80,7 @@
                         android:layout_height="wrap_content"
                         android:id="@+id/dislike"
                         android:src="@drawable/sad"
+                        android:backgroundTint="@color/button_bg"
                         android:layout_weight="1"/>
                     <ImageButton
                         android:text="Button"
@@ -93,6 +88,7 @@
                         android:layout_height="wrap_content"
                         android:id="@+id/share"
                         android:src="@drawable/share"
+                        android:backgroundTint="@color/button_bg"
                         android:layout_weight="1"/>
                     <ImageButton
                         android:text="Button"
@@ -100,8 +96,17 @@
                         android:layout_height="wrap_content"
                         android:id="@+id/participate"
                         android:src="@drawable/check"
+                        android:backgroundTint="@color/button_bg"
                         android:layout_weight="1"/>
                 </LinearLayout>
+
+                <TextView
+                    android:layout_margin="@dimen/text_margin"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/hello_blank_fragment"
+                    android:id="@+id/text_view_event_description"
+                    android:layout_below="@id/event_details_header"/>
 
             </LinearLayout>
 

@@ -124,8 +124,14 @@ public class EventManager {
         event0.getLocation().setName("Proxima");
         Event event1 = EventManager.FacebookEventFetcher.getFacebookEventAsync("247854448900392");
         Event event2 = EventManager.FacebookEventFetcher.getFacebookEventAsync("1968572576702697");
+        Event event3 = new Event();
+        event3.setName("Party soft long hard dick nigger shit ");
+        event3.setDescription("yo");
+        event3.setLocation(new Location());
+        event3.getLocation().setName("Proxima");
         //Event event3 = FacebookEventFetcher.getFacebookEvent("899937366817209");
         ret.add(event0);
+        ret.add(event3);
         if (event1 != null) ret.add(event1);
         if (event2 != null) ret.add(event2);
         //if (event3 != null) ret.add(event3);

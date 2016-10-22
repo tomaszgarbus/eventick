@@ -3,6 +3,7 @@ package hackaton.waw.eventnotifier.event;
 import android.content.Context;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -54,12 +55,22 @@ public class EventListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = (RecyclerView) inflater.inflate(R.layout.fragment_event_list, container, false);
+        SwipeRefreshLayout view = (SwipeRefreshLayout) inflater.inflate(R.layout.fragment_event_list, container, false);
+        view.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                // Your code to refresh the list here.
+                // Make sure you call swipeContainer.setRefreshing(false)
+                // once the network request has completed successfully.
+                //TODO set refresh
+            }
+        });
 
+        View listview = view.findViewById(R.id.fragment_event_list);
         // Set the adapter
-        if (view instanceof RecyclerView) {
+        if (listview instanceof RecyclerView) {
             Context context = view.getContext();
-            RecyclerView recyclerView = (RecyclerView) view;
+            RecyclerView recyclerView = (RecyclerView) listview;
             if (mColumnCount <= 1) {
                 recyclerView.setLayoutManager(new LinearLayoutManager(context));
             } else {

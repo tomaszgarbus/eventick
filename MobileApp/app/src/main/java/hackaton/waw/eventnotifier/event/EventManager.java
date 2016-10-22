@@ -78,7 +78,7 @@ public class EventManager {
                                     event.setDescription(json.getString("description"));
                                 }
                                 if (json.has("cover")) {
-                                    event.setPicture(bitmapFromCoverSource(json.getJSONObject("cover").getString("source")));
+                                    //event.setPicture(bitmapFromCoverSource(json.getJSONObject("cover").getString("source")));
                                 }
                                 if (json.has("start_time")) {
                                     System.out.print(json.getString("start_time"));

@@ -37,8 +37,12 @@ public class Event {
 
     private Bitmap picture;
 
-    @DatabaseField
+    @DatabaseField(useGetSet = true)
     private String pictureURL;
+    public void setPictureURL(String pictureURL) {
+        this.pictureURL = pictureURL;
+        this.picture = EventManager.FacebookEventFetcher.bitmapFromCoverSource(pictureURL);
+    }
 
     @DatabaseField
     private Date date;

@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -56,7 +57,7 @@ public class EventManager {
 
     public static class FacebookEventFetcher {
 
-        private static Bitmap bitmapFromCoverSource(final String source) {
+        public static Bitmap bitmapFromCoverSource(final String source) {
             AsyncTask<String, Integer, Bitmap> asyncTask = new AsyncTask<String, Integer, Bitmap>() {
                 @Override
                 protected Bitmap doInBackground(String... params) {
@@ -101,7 +102,9 @@ public class EventManager {
                                     event.setDescription(json.getString("description"));
                                 }
                                 if (json.has("cover")) {
-                                    //event.setPicture(bitmapFromCoverSource(json.getJSONObject("cover").getString("source")));
+                                    String source = json.getJSONObject("cover").getString("source");
+                                    event.setPictureURL(source);
+                                    event.setPicture(bitmapFromCoverSource(source));
                                 }
                                 if (json.has("start_time")) {
                                     System.out.print(json.getString("start_time"));
@@ -172,6 +175,8 @@ public class EventManager {
 
     public void initialize() throws SQLException {
         events = eventDao.queryForAll();
+        Iterator<Event> iter = events.iterator();
+
     }
 
     public /*static*/ List<Event> queryRecommendedEvents() {

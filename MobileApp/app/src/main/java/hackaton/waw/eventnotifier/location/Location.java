@@ -24,12 +24,28 @@ public class Location {
     String name;
 
     @DatabaseField
-    double lat;
+    Double lat;
 
     @DatabaseField
-    double lng;
+    Double lng;
 
     public Location() {
         name = "";
+    }
+
+    public LatLng getLatLng() {
+        if (lat != null && lng != null) {
+            return new LatLng(lat, lng);
+        } else {
+            return null;
+        }
+    }
+
+    public void setLatLng(LatLng latLng) {
+        if (latLng == null) {
+            return;
+        }
+        lat = latLng.latitude;
+        lng = latLng.longitude;
     }
 }

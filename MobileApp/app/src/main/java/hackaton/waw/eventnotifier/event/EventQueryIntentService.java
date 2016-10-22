@@ -24,7 +24,6 @@ import hackaton.waw.eventnotifier.db.DBHelper;
 public class EventQueryIntentService extends IntentService {
 
     private EventManager eventManager;
-    private AlarmManager alarmManager;
 
     public EventQueryIntentService() {
         super("EventQueryIntentService");

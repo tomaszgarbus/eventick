@@ -2,6 +2,7 @@ package hackaton.waw.eventnotifier.event;
 
 import android.graphics.Bitmap;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
@@ -41,4 +42,5 @@ public class Event {
 
     @DatabaseField
     private Date date;
+
 }

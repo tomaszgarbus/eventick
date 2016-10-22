@@ -65,7 +65,7 @@ public class EventListFragment extends Fragment {
             public void onRefresh() {
                 try {
                     ((MainActivity)getActivity()).getEventManager().initialize();
-                } catch (SQLException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
                 recyclerView.getAdapter().notifyDataSetChanged();

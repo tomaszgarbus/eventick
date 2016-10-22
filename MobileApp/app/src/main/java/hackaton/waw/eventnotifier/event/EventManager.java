@@ -177,7 +177,12 @@ public class EventManager {
 
 
     public void initialize() throws SQLException {
-        events = eventDao.queryForAll();
+        if (events != null) {
+            events.clear();
+        } else {
+            events = Collections.synchronizedList(new ArrayList<Event>());
+        }
+        events.addAll(eventDao.queryForAll());
     }
 
     public /*static*/ List<Event> queryRecommendedEvents() {
@@ -187,8 +192,8 @@ public class EventManager {
 
     public void storeEvent(Event event) throws SQLException {
         eventDao.create(event);
-        eventDao.commit(dbHelper.getConnectionSource().getReadWriteConnection());
-        locDao.commit(dbHelper.getConnectionSource().getReadWriteConnection());
+        //eventDao.commit(dbHelper.getConnectionSource().getReadWriteConnection());
+        //locDao.commit(dbHelper.getConnectionSource().getReadWriteConnection());
         //TODO: update
     }
 }

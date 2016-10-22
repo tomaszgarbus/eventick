@@ -33,7 +33,9 @@ public class EventRecyclerViewAdapter extends RecyclerView.Adapter<EventRecycler
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = events.get(position);
         holder.mIdView.setText(events.get(position).getName());
-        holder.mContentView.setText(events.get(position).getLocation().getName());
+        if (events.get(position).getLocation() != null) {
+            holder.mContentView.setText(events.get(position).getLocation().getName());
+        }
         if (events.get(position).getPicture() != null) {
             //holder.mImageView.setImageBitmap(events.get(position).getPicture());
         }

@@ -46,6 +46,7 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
              * creates the Todo database table
              */
             TableUtils.createTable(connectionSource, Event.class);
+            TableUtils.createTable(connectionSource, Location.class);
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -60,6 +61,7 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
              * Recreates the database when onUpgrade is called by the framework
              */
             TableUtils.dropTable(connectionSource, Event.class, false);
+            TableUtils.dropTable(connectionSource, Location.class, false);
             onCreate(database, connectionSource);
 
         } catch (SQLException e) {

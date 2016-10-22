@@ -1,5 +1,6 @@
 package hackaton.waw.eventnotifier.event;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -9,17 +10,21 @@ import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.HttpMethod;
 import com.google.android.gms.maps.model.LatLng;
+import com.j256.ormlite.dao.Dao;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+import hackaton.waw.eventnotifier.MainActivity;
+import hackaton.waw.eventnotifier.db.DBHelper;
 import hackaton.waw.eventnotifier.location.Location;
 import lombok.Getter;
 import lombok.Setter;
@@ -31,6 +36,22 @@ import lombok.Setter;
 @Getter
 @Setter
 public class EventManager {
+
+    Context context;
+    Dao<Event, Long> eventDao;
+    DBHelper dbHelper;
+
+    public EventManager(DBHelper dbHelper){
+        try {
+            this.dbHelper = dbHelper;
+            eventDao = dbHelper.getEventDao();
+            initialize();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            //TODO handling
+        }
+    }
+
 
     public static class FacebookEventFetcher {
 
@@ -79,7 +100,7 @@ public class EventManager {
                                     event.setDescription(json.getString("description"));
                                 }
                                 if (json.has("cover")) {
-                                    event.setPicture(bitmapFromCoverSource(json.getJSONObject("cover").getString("source")));
+                                    //event.setPicture(bitmapFromCoverSource(json.getJSONObject("cover").getString("source")));
                                 }
                                 if (json.has("start_time")) {
                                     System.out.print(json.getString("start_time"));
@@ -147,13 +168,9 @@ public class EventManager {
 
     private List<Event> events;
 
-    public EventManager() {
-        initialize();
-    }
 
-    public void initialize() {
-        events = Collections.synchronizedList(getSampleEvents());
-        //TODO: load from database
+    public void initialize() throws SQLException {
+        events = eventDao.queryForAll();
     }
 
     public /*static*/ List<Event> queryRecommendedEvents() {
@@ -161,8 +178,8 @@ public class EventManager {
         //TODO: actuallly ask server for new events
     }
 
-    public void storeEvent(Event event) {
-        //events.add(event);
-        //TODO: save event to database
+    public void storeEvent(Event event) throws SQLException {
+        eventDao.create(event);
+        //TODO: update
     }
 }

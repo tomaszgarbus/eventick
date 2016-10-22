@@ -2,6 +2,9 @@ package hackaton.waw.eventnotifier.event;
 
 import android.graphics.Bitmap;
 
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -16,10 +19,24 @@ import lombok.Setter;
 
 @Getter
 @Setter
+@DatabaseTable(tableName = "event")
 public class Event {
+
+    @DatabaseField(generatedId = true)
+    private Long id;
+
+    @DatabaseField
     private String name;
+
+    @DatabaseField
     private String description;
+
+    @DatabaseField
     private Location location;
-    private Bitmap picture;
+
+    @DatabaseField
+    private String picture;
+
+    @DatabaseField
     private Date date;
 }

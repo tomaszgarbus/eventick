@@ -78,7 +78,7 @@ public class EventDetailsFragment extends Fragment implements OnMapReadyCallback
         eventDescriptionTextView.setText(event.getDescription());
         eventLocationTextView.setText(event.getLocation().getName());
         if (event.getPicture() != null) {
-            eventPictureImageView.setImageBitmap(event.getPicture());
+            //eventPictureImageView.setImageBitmap(event.getPicture());
         }
         //Prepare Google Map
         MapFragment mapFragment = (MapFragment) getChildFragmentManager()

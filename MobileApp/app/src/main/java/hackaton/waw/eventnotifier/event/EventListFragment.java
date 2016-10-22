@@ -63,6 +63,11 @@ public class EventListFragment extends Fragment {
         view.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                try {
+                    ((MainActivity)getActivity()).getEventManager().initialize();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
                 recyclerView.getAdapter().notifyDataSetChanged();
                 view.setRefreshing(false);
             }

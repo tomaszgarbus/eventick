@@ -18,6 +18,7 @@ import org.json.JSONObject;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -174,8 +175,8 @@ public class EventManager {
     }
 
     public /*static*/ List<Event> queryRecommendedEvents() {
-        return events;
-        //TODO: actuallly ask server for new events
+        Event event1 = FacebookEventFetcher.getFacebookEvent("247854448900392");
+        return Arrays.asList(event1);
     }
 
     public void storeEvent(Event event) throws SQLException {

@@ -32,7 +32,7 @@ public class Event {
     @DatabaseField
     private String description;
 
-    @DatabaseField(foreign = true, foreignAutoCreate = true, foreignAutoRefresh = true)
+    @DatabaseField(foreign = true, foreignAutoCreate = true, foreignAutoRefresh = true, )
     private Location location;
 
     private Bitmap picture;

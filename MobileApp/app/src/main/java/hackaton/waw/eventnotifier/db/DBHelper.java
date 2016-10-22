@@ -77,6 +77,7 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
     public Dao<Event, Long> getEventDao() throws SQLException {
         if(todoDao == null) {
             todoDao = getDao(Event.class);
+            todoDao.setAutoCommit(true);
         }
         return todoDao;
     }
@@ -84,6 +85,7 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
     public Dao<Location, Long> getLocationDao() throws SQLException {
         if(locDao == null) {
             locDao = getDao(Location.class);
+            locDao.setAutoCommit(true);
         }
         return locDao;
     }

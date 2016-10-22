@@ -23,7 +23,7 @@ public class Location {
     @DatabaseField
     String name;
 
-    @DatabaseField
+    @DatabaseField()
     Double lat;
 
     @DatabaseField

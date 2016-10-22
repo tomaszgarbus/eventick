@@ -31,7 +31,7 @@ public class Event {
     @DatabaseField
     private String description;
 
-    @DatabaseField
+    @DatabaseField(foreign = true)
     private Location location;
 
     @DatabaseField

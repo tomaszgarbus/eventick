@@ -32,7 +32,7 @@ public class Event {
     @DatabaseField
     private String description;
 
-    @DatabaseField(foreign = true, foreignAutoCreate = true, foreignAutoRefresh = true, )
+    @DatabaseField(foreign = true, foreignAutoCreate = true, foreignAutoRefresh = true)
     private Location location;
 
     private Bitmap picture;
@@ -42,6 +42,7 @@ public class Event {
     public void setPictureURL(String pictureURL) {
         this.pictureURL = pictureURL;
         this.picture = EventManager.FacebookEventFetcher.bitmapFromCoverSource(pictureURL);
+
     }
 
     @DatabaseField

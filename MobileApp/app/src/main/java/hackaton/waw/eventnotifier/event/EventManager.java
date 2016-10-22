@@ -111,7 +111,8 @@ public class EventManager {
                                 }
                                 if (json.has("place")) {
                                     event.getLocation().setName(json.getJSONObject("place").getString("name"));
-                                    if (json.getJSONObject("place").has("latitude") && json.getJSONObject("place").has("longitude")) {
+                                    if (json.getJSONObject("place").getJSONObject("location").has("latitude") &&
+                                            json.getJSONObject("place").getJSONObject("location").has("longitude")) {
                                         double latitude = json.getJSONObject("place").getJSONObject("location").getDouble("latitude");
                                         double longitude = json.getJSONObject("place").getJSONObject("location").getDouble("longitude");
                                         event.getLocation().setLatLng(new LatLng(latitude, longitude));
@@ -175,8 +176,6 @@ public class EventManager {
 
     public void initialize() throws SQLException {
         events = eventDao.queryForAll();
-        Iterator<Event> iter = events.iterator();
-
     }
 
     public /*static*/ List<Event> queryRecommendedEvents() {

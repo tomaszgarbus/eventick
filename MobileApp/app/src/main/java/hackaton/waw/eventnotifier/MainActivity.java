@@ -1,6 +1,9 @@
 package hackaton.waw.eventnotifier;
 
+import android.app.AlarmManager;
 import android.app.IntentService;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -76,6 +79,9 @@ public class MainActivity extends AppCompatActivity
         setStatusBarTranslucent(true);
 
         Intent serviceIntent = new Intent(this, EventQueryIntentService.class);
+        AlarmManager alarmManager =  (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, serviceIntent, 0);
+        alarmManager.setRepeating(AlarmManager.RTC, System.currentTimeMillis() + 1000, 1000, pendingIntent);
         startService(serviceIntent);
     }
 

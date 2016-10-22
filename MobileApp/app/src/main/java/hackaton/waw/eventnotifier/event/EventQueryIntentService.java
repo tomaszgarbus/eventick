@@ -4,6 +4,7 @@ import android.app.AlarmManager;
 import android.app.IntentService;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.content.Context;
 import android.graphics.Color;
@@ -31,6 +32,7 @@ public class EventQueryIntentService extends IntentService {
                 .setContentTitle(getString(R.string.new_event_in_warsaw))
                 .setContentText(event.getName())
                 .setSmallIcon(R.drawable.placeholder);
+        if (event.getPicture() != null) notifBuilder.setLargeIcon(event.getPicture());
         NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         manager.notify(new Random().nextInt(), notifBuilder.build());
     }
@@ -40,7 +42,7 @@ public class EventQueryIntentService extends IntentService {
         eventManager = new EventManager();
         if (intent != null) {
             final String action = intent.getAction();
-            List<Event> newEvents = eventManager.getEvents();
+            List<Event> newEvents = eventManager.queryRecommendedEvents();
             Iterator<Event> iter = newEvents.iterator();
             while (iter.hasNext()) {
                 Event event = iter.next();
@@ -49,5 +51,6 @@ public class EventQueryIntentService extends IntentService {
                 notifyAboutEvent(event);
             }
         }
+
     }
 }

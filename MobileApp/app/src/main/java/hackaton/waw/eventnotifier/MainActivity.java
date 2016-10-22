@@ -26,6 +26,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import hackaton.waw.eventnotifier.event.Event;
+import hackaton.waw.eventnotifier.event.EventAlarmReceiver;
 import hackaton.waw.eventnotifier.event.EventDetailsFragment;
 import hackaton.waw.eventnotifier.event.EventListFragment;
 import hackaton.waw.eventnotifier.event.EventManager;
@@ -78,11 +79,11 @@ public class MainActivity extends AppCompatActivity
 
         setStatusBarTranslucent(true);
 
-        Intent serviceIntent = new Intent(this, EventQueryIntentService.class);
+        Intent alarmIntent = new Intent(this, EventAlarmReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, alarmIntent, 0);
         AlarmManager alarmManager =  (AlarmManager)getSystemService(Context.ALARM_SERVICE);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, serviceIntent, 0);
-        alarmManager.setRepeating(AlarmManager.RTC, System.currentTimeMillis() + 1000, 60000, pendingIntent);
-        startService(serviceIntent);
+        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, 10000, 1000, pendingIntent);
+        //startService(serviceIntent);
     }
 
     @Override

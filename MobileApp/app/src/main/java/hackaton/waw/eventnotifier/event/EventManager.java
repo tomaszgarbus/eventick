@@ -69,6 +69,7 @@ public class EventManager {
                     new GraphRequest.Callback() {
                         @Override
                         public void onCompleted(GraphResponse response) {
+                            System.out.print(response.toString());
                             try {
                                 JSONObject json = response.getJSONObject();
                                 if (json.has("name")) {
@@ -134,11 +135,12 @@ public class EventManager {
         event3.setDescription("yo");
         event3.setLocation(new Location());
         event3.getLocation().setName("Proxima");
-        //Event event3 = FacebookEventFetcher.getFacebookEvent("899937366817209");
+        Event event4 = FacebookEventFetcher.getFacebookEventAsync("187877934986121");
         ret.add(event0);
         ret.add(event3);
         if (event1 != null) ret.add(event1);
         if (event2 != null) ret.add(event2);
+        if (event4 != null) ret.add(event4);
         //if (event3 != null) ret.add(event3);
         return ret;
     }
@@ -155,7 +157,7 @@ public class EventManager {
     }
 
     public /*static*/ List<Event> queryRecommendedEvents() {
-        return getSampleEvents();
+        return events;
         //TODO: actuallly ask server for new events
     }
 

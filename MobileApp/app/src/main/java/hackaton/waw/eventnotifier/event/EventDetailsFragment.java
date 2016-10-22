@@ -56,10 +56,14 @@ public class EventDetailsFragment extends Fragment implements OnMapReadyCallback
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        if (event.getLocation() != null && event.getLocation().getLatLng() != null) {
-            googleMap.addMarker(new MarkerOptions().position(event.getLocation().getLatLng()).title("Here"));
-            googleMap.moveCamera(CameraUpdateFactory.newLatLng(event.getLocation().getLatLng()));
-            googleMap.setMinZoomPreference(15);
+        if (event.getLocation() != null) {
+            if (event.getLocation().getLatLng() != null) {
+                googleMap.addMarker(new MarkerOptions().position(event.getLocation().getLatLng()).title("Here"));
+                googleMap.moveCamera(CameraUpdateFactory.newLatLng(event.getLocation().getLatLng()));
+                googleMap.setMinZoomPreference(15);
+            } else {
+
+            }
         }
     }
 

@@ -81,7 +81,7 @@ public class MainActivity extends AppCompatActivity
         Intent serviceIntent = new Intent(this, EventQueryIntentService.class);
         AlarmManager alarmManager =  (AlarmManager)getSystemService(Context.ALARM_SERVICE);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, serviceIntent, 0);
-        alarmManager.setRepeating(AlarmManager.RTC, System.currentTimeMillis() + 1000, 1000, pendingIntent);
+        alarmManager.setRepeating(AlarmManager.RTC, System.currentTimeMillis() + 1000, 60000, pendingIntent);
         startService(serviceIntent);
     }
 

@@ -41,12 +41,14 @@ public class EventManager {
 
     Context context;
     Dao<Event, Long> eventDao;
+    Dao<Location, Long> locDao;
     DBHelper dbHelper;
 
     public EventManager(DBHelper dbHelper){
         try {
             this.dbHelper = dbHelper;
             eventDao = dbHelper.getEventDao();
+            locDao = dbHelper.getLocationDao();
             initialize();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -186,6 +188,8 @@ public class EventManager {
 
     public void storeEvent(Event event) throws SQLException {
         eventDao.create(event);
+        eventDao.commit(dbHelper.getConnectionSource().getReadWriteConnection());
+        locDao.commit(dbHelper.getConnectionSource().getReadWriteConnection());
         //TODO: update
     }
 }

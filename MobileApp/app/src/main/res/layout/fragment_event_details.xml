@@ -44,9 +44,14 @@
                         android:layout_alignParentBottom="true"
                         android:textColor="#ffffff"
                         android:textSize="20dp"
-                        android:layout_margin="@dimen/text_margin"
                         android:text="@string/hello_blank_fragment"
-                        android:id="@+id/text_view_event_name"/>
+                        android:ellipsize="end"
+                        android:scrollHorizontally="true"
+                        android:singleLine="true"
+                        android:id="@+id/text_view_event_name"
+                        android:layout_marginLeft="@dimen/text_margin"
+                        android:layout_marginTop="@dimen/text_margin"
+                        android:layout_marginBottom="@dimen/text_margin" />
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"

@@ -11,6 +11,7 @@ import android.graphics.Color;
 import android.support.v4.app.NotificationCompat;
 
 
+import com.facebook.AccessToken;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 
 import java.sql.SQLException;
@@ -45,6 +46,9 @@ public class EventQueryIntentService extends IntentService {
         DBHelper dbHelper = OpenHelperManager.getHelper(this, DBHelper.class);
         eventManager = new EventManager(dbHelper);
         if (intent != null) {
+            if (AccessToken.getCurrentAccessToken() == null) {
+                return;
+            }
             final String action = intent.getAction();
             List<Event> newEvents = eventManager.queryRecommendedEvents();
             Iterator<Event> iter = newEvents.iterator();

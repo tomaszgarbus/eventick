@@ -3,6 +3,7 @@ package hackaton.waw.eventnotifier.event;
 import android.graphics.Bitmap;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import hackaton.waw.eventnotifier.location.Location;
@@ -20,4 +21,5 @@ public class Event {
     private String description;
     private Location location;
     private Bitmap picture;
+    private Date date;
 }

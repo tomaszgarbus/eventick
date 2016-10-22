@@ -1,24 +1,15 @@
 package hackaton.waw.eventnotifier;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.support.annotation.RequiresApi;
-import android.util.EventLog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
-import com.facebook.AccessToken;
-import com.facebook.GraphRequest;
-import com.facebook.GraphResponse;
-
-import org.json.JSONObject;
-
-import hackaton.waw.eventnotifier.R;
+import hackaton.waw.eventnotifier.event.EventListFragment;
 
 public class MainFragment extends Fragment {
 

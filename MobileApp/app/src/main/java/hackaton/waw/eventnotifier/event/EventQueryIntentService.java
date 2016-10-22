@@ -1,4 +1,4 @@
-package hackaton.waw.eventnotifier;
+package hackaton.waw.eventnotifier.event;
 
 import android.app.IntentService;
 import android.content.Intent;

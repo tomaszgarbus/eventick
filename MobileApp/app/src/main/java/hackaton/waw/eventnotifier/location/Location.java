@@ -1,4 +1,4 @@
-package hackaton.waw.eventnotifier;
+package hackaton.waw.eventnotifier.location;
 
 import com.google.android.gms.maps.model.LatLng;
 
@@ -15,4 +15,8 @@ import lombok.Setter;
 public class Location {
     String name;
     LatLng latLng;
+
+    public Location() {
+        name = "";
+    }
 }

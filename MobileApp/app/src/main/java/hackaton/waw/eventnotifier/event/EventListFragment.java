@@ -1,4 +1,4 @@
-package hackaton.waw.eventnotifier;
+package hackaton.waw.eventnotifier.event;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -10,11 +10,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import hackaton.waw.eventnotifier.MainActivity;
+import hackaton.waw.eventnotifier.R;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Getter
 @Setter
@@ -66,8 +65,7 @@ public class EventListFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            List<Event> sampleEvents = Event.getSampleEvents();
-            recyclerView.setAdapter(new EventRecyclerViewAdapter(sampleEvents, mListener));
+            recyclerView.setAdapter(new EventRecyclerViewAdapter(((MainActivity)getActivity()).getEventManager().getEvents(), mListener));
         }
         return view;
     }

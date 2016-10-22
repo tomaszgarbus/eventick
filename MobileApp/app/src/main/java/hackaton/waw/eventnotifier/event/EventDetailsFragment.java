@@ -1,4 +1,4 @@
-package hackaton.waw.eventnotifier;
+package hackaton.waw.eventnotifier.event;
 
 import android.content.Context;
 import android.net.Uri;
@@ -12,13 +12,13 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.LocationSource;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import hackaton.waw.eventnotifier.R;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -56,7 +56,11 @@ public class EventDetailsFragment extends Fragment implements OnMapReadyCallback
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        //TODO: set location of event (if available)
+        if (event.getLocation().getLatLng() != null) {
+            googleMap.addMarker(new MarkerOptions().position(event.getLocation().getLatLng()).title("Here"));
+            googleMap.moveCamera(CameraUpdateFactory.newLatLng(event.getLocation().getLatLng()));
+            googleMap.setMinZoomPreference(15);
+        }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
@@ -76,7 +80,6 @@ public class EventDetailsFragment extends Fragment implements OnMapReadyCallback
         if (event.getPicture() != null) {
             eventPictureImageView.setImageBitmap(event.getPicture());
         }
-
         //Prepare Google Map
         MapFragment mapFragment = (MapFragment) getChildFragmentManager()
                 .findFragmentById(R.id.map);

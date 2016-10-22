@@ -1,4 +1,4 @@
-package hackaton.waw.eventnotifier;
+package hackaton.waw.eventnotifier.event;
 
 import android.app.NotificationManager;
 import android.app.Service;
@@ -13,6 +13,9 @@ import android.support.v4.app.NotificationCompat;
 import android.widget.Toast;
 
 import java.io.FileDescriptor;
+
+import hackaton.waw.eventnotifier.location.Location;
+import hackaton.waw.eventnotifier.R;
 
 public class EventQueryService extends Service {
     public EventQueryService() {
@@ -83,6 +86,7 @@ public class EventQueryService extends Service {
         sampleEvent.setLocation(new Location());
         sampleEvent.getLocation().setName("EventLocationName");
         notifyAboutEvent(sampleEvent);
+
         return iBinder;
     }
 }

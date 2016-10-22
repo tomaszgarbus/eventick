@@ -21,10 +21,12 @@ import com.facebook.CallbackManager;
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
 import com.facebook.login.LoginManager;
+import com.j256.ormlite.android.apptools.OpenHelperManager;
 
 import java.util.Arrays;
 import java.util.List;
 
+import hackaton.waw.eventnotifier.db.DBHelper;
 import hackaton.waw.eventnotifier.event.Event;
 import hackaton.waw.eventnotifier.event.EventDetailsFragment;
 import hackaton.waw.eventnotifier.event.EventListFragment;
@@ -41,6 +43,7 @@ public class MainActivity extends AppCompatActivity
 
     private CallbackManager callbackManager;
     private EventManager eventManager;
+    public DBHelper dbHelper;
 
     protected void setStatusBarTranslucent(boolean makeTranslucent) {
         if (makeTranslucent) {
@@ -53,6 +56,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        dbHelper = OpenHelperManager.getHelper(this, DBHelper.class);
         FacebookSdk.sdkInitialize(this);
         callbackManager = CallbackManager.Factory.create();
         AppEventsLogger.activateApp(this);

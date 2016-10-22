@@ -70,7 +70,7 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
      * @return
      * @throws SQLException
      */
-    public Dao<Event, Long> getDao() throws SQLException {
+    public Dao<Event, Long> getEventDao() throws SQLException {
         if(todoDao == null) {
             todoDao = getDao(Event.class);
         }

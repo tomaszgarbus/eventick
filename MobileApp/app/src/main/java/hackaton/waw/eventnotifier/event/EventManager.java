@@ -15,6 +15,8 @@ import org.json.JSONObject;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -122,8 +124,8 @@ public class EventManager {
         event0.setDescription("yo");
         event0.setLocation(new Location());
         event0.getLocation().setName("Proxima");
-        Event event1 = EventManager.FacebookEventFetcher.getFacebookEventAsync("247854448900392");
-        Event event2 = EventManager.FacebookEventFetcher.getFacebookEventAsync("1968572576702697");
+        Event event1 = FacebookEventFetcher.getFacebookEventAsync("247854448900392");
+        Event event2 = FacebookEventFetcher.getFacebookEventAsync("1968572576702697");
         Event event3 = new Event();
         event3.setName("Party soft long hard dick nigger shit ");
         event3.setDescription("yo");
@@ -145,7 +147,7 @@ public class EventManager {
     }
 
     public void initialize() {
-        events = getSampleEvents();
+        events = Collections.synchronizedList(getSampleEvents());
         //TODO: load from database
     }
 
@@ -155,7 +157,7 @@ public class EventManager {
     }
 
     public void storeEvent(Event event) {
-        events.add(event);
+        //events.add(event);
         //TODO: save event to database
     }
 }

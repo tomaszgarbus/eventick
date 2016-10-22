@@ -15,6 +15,7 @@ import hackaton.waw.eventnotifier.MainActivity;
 import hackaton.waw.eventnotifier.R;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.core.Main;
 
 @Getter
 @Setter
@@ -25,6 +26,7 @@ public class EventListFragment extends Fragment {
     // TODO: Customize parameters
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
+    private RecyclerView recyclerView;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -55,14 +57,17 @@ public class EventListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        SwipeRefreshLayout view = (SwipeRefreshLayout) inflater.inflate(R.layout.fragment_event_list, container, false);
+        final SwipeRefreshLayout view = (SwipeRefreshLayout) inflater.inflate(R.layout.fragment_event_list, container, false);
         view.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 // Your code to refresh the list here.
                 // Make sure you call swipeContainer.setRefreshing(false)
                 // once the network request has completed successfully.
-                //TODO set refresh
+                //TODO set refresh (view.setRefreshing(false))
+                //((MainActivity)getActivity()).getEventManager()
+                recyclerView.getAdapter().notifyDataSetChanged();
+                view.setRefreshing(false);
             }
         });
 
@@ -70,7 +75,7 @@ public class EventListFragment extends Fragment {
         // Set the adapter
         if (listview instanceof RecyclerView) {
             Context context = view.getContext();
-            RecyclerView recyclerView = (RecyclerView) listview;
+            recyclerView = (RecyclerView) listview;
             if (mColumnCount <= 1) {
                 recyclerView.setLayoutManager(new LinearLayoutManager(context));
             } else {

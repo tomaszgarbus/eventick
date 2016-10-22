@@ -9,7 +9,10 @@ import android.content.Context;
 import android.graphics.Color;
 import android.support.v4.app.NotificationCompat;
 
+
+import java.util.Iterator;
 import java.util.List;
+import java.util.Random;
 
 import hackaton.waw.eventnotifier.R;
 
@@ -29,7 +32,7 @@ public class EventQueryIntentService extends IntentService {
                 .setContentText(event.getName())
                 .setSmallIcon(R.drawable.placeholder);
         NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        manager.notify(0, notifBuilder.build());
+        manager.notify(new Random().nextInt(), notifBuilder.build());
     }
 
     @Override
@@ -38,7 +41,9 @@ public class EventQueryIntentService extends IntentService {
         if (intent != null) {
             final String action = intent.getAction();
             List<Event> newEvents = eventManager.getEvents();
-            for (Event event : newEvents) {
+            Iterator<Event> iter = newEvents.iterator();
+            while (iter.hasNext()) {
+                Event event = iter.next();
                 System.out.println("eloszki");
                 eventManager.storeEvent(event);
                 notifyAboutEvent(event);

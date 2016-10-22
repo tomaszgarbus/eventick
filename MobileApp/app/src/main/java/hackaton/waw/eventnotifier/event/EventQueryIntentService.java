@@ -11,11 +11,15 @@ import android.graphics.Color;
 import android.support.v4.app.NotificationCompat;
 
 
+import com.j256.ormlite.android.apptools.OpenHelperManager;
+
+import java.sql.SQLException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
 import hackaton.waw.eventnotifier.R;
+import hackaton.waw.eventnotifier.db.DBHelper;
 
 public class EventQueryIntentService extends IntentService {
 
@@ -39,7 +43,8 @@ public class EventQueryIntentService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        eventManager = new EventManager();
+        DBHelper dbHelper = OpenHelperManager.getHelper(this, DBHelper.class);
+        eventManager = new EventManager(dbHelper);
         if (intent != null) {
             final String action = intent.getAction();
             List<Event> newEvents = eventManager.queryRecommendedEvents();
@@ -47,7 +52,11 @@ public class EventQueryIntentService extends IntentService {
             while (iter.hasNext()) {
                 Event event = iter.next();
                 System.out.println("eloszki");
-                eventManager.storeEvent(event);
+                try {
+                    eventManager.storeEvent(event);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
                 notifyAboutEvent(event);
             }
         }

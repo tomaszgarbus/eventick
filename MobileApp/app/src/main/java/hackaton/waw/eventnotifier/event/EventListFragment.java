@@ -11,6 +11,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.sql.SQLException;
+
 import hackaton.waw.eventnotifier.MainActivity;
 import hackaton.waw.eventnotifier.R;
 import lombok.Getter;
@@ -61,11 +63,6 @@ public class EventListFragment extends Fragment {
         view.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                // Your code to refresh the list here.
-                // Make sure you call swipeContainer.setRefreshing(false)
-                // once the network request has completed successfully.
-                //TODO set refresh (view.setRefreshing(false))
-                //((MainActivity)getActivity()).getEventManager()
                 recyclerView.getAdapter().notifyDataSetChanged();
                 view.setRefreshing(false);
             }

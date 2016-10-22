@@ -31,11 +31,13 @@ public class Event {
     @DatabaseField
     private String description;
 
-    @DatabaseField
+    //@DatabaseField
     private Location location;
 
+    private Bitmap picture;
+
     @DatabaseField
-    private String picture;
+    private String pictureURL;
 
     @DatabaseField
     private Date date;

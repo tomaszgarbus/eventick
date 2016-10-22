@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity
         AppEventsLogger.activateApp(this);
         LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("public_profile"));
 
-        eventManager = new EventManager();
+        eventManager = new EventManager(dbHelper);
 
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);

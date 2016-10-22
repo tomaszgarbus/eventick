@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 
 import hackaton.waw.eventnotifier.event.Event;
+import hackaton.waw.eventnotifier.location.Location;
 
 /**
  * OrmliteDatabaseConfigUtil is a separate program from the actual android app,
@@ -19,7 +20,7 @@ public class OrmliteDatabaseConfigUtil extends OrmLiteConfigUtil {
     /**
      * classes represents the models to use for generating the ormlite_config.txt file
      */
-    private static final Class<?>[] classes = new Class[] {Event.class};
+    private static final Class<?>[] classes = new Class[] {Event.class, Location.class};
 
     /**
      * Given that this is a separate program from the android app, we have to use

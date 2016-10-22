@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import hackaton.waw.eventnotifier.MainActivity;
+import hackaton.waw.eventnotifier.db.DBHelper;
 import hackaton.waw.eventnotifier.location.Location;
 import lombok.Getter;
 import lombok.Setter;
@@ -38,10 +39,19 @@ public class EventManager {
 
     Context context;
     Dao<Event, Long> eventDao;
+    DBHelper dbHelper;
 
-    public EventManager(Context context){
-        this.context = context;
+    public EventManager(DBHelper dbHelper){
+        try {
+            this.dbHelper = dbHelper;
+            eventDao = dbHelper.getEventDao();
+            initialize();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            //TODO handling
+        }
     }
+
 
     public static class FacebookEventFetcher {
 
@@ -156,17 +166,8 @@ public class EventManager {
 
     private List<Event> events;
 
-    public EventManager() {
-        try {
-            initialize();
-        } catch (SQLException e) {
-            e.printStackTrace();
-            //TODO handling
-        }
-    }
 
     public void initialize() throws SQLException {
-        eventDao = ((MainActivity)context.getApplicationContext()).dbHelper.getEventDao();
         events = eventDao.queryForAll();
     }
 

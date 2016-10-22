@@ -35,10 +35,6 @@
             tools:replace="android:theme" />
 
         <service
-            android:name=".event.EventQueryService"
-            android:enabled="true"
-            android:exported="true" />
-        <service
             android:name=".event.EventQueryIntentService"
             android:exported="false" />
 

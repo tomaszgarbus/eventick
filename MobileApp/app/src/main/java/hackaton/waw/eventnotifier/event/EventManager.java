@@ -50,7 +50,7 @@ public class EventManager {
                 }
             };
             try {
-                return asyncTask.execute().get();
+                return asyncTask.execute().get(); //not really async, get(() waits for result
             } catch (InterruptedException e) {
                 e.printStackTrace();
             } catch (ExecutionException e) {
@@ -59,10 +59,7 @@ public class EventManager {
             return null;
         }
 
-        public static Event getFacebookEvent(String eventId) {
-            if (AccessToken.getCurrentAccessToken() == null) return null;
-            final Event event = new Event();
-            event.setLocation(new Location());
+        private static GraphRequest createGraphRequest(String eventId, final Event event) {
             GraphRequest request = new GraphRequest(AccessToken.getCurrentAccessToken(),
                     "/" + eventId + "?fields=name,description,place,cover,type",
                     null,
@@ -96,6 +93,23 @@ public class EventManager {
                             System.out.println(response.getJSONObject().toString());
                         }
                     });
+            return request;
+        }
+
+        public static Event getFacebookEvent(String eventId) {
+            if (AccessToken.getCurrentAccessToken() == null) return null;
+            final Event event = new Event();
+            event.setLocation(new Location());
+            GraphRequest request = createGraphRequest(eventId, event);
+            request.executeAndWait();
+            return event;
+        }
+
+        public static Event getFacebookEventAsync(String eventId) {
+            if (AccessToken.getCurrentAccessToken() == null) return null;
+            final Event event = new Event();
+            event.setLocation(new Location());
+            GraphRequest request = createGraphRequest(eventId, event);
             request.executeAsync();
             return event;
         }
@@ -108,8 +122,8 @@ public class EventManager {
         event0.setDescription("yo");
         event0.setLocation(new Location());
         event0.getLocation().setName("Proxima");
-        Event event1 = EventManager.FacebookEventFetcher.getFacebookEvent("247854448900392");
-        Event event2 = EventManager.FacebookEventFetcher.getFacebookEvent("1968572576702697");
+        Event event1 = EventManager.FacebookEventFetcher.getFacebookEventAsync("247854448900392");
+        Event event2 = EventManager.FacebookEventFetcher.getFacebookEventAsync("1968572576702697");
         //Event event3 = FacebookEventFetcher.getFacebookEvent("899937366817209");
         ret.add(event0);
         if (event1 != null) ret.add(event1);
@@ -126,6 +140,16 @@ public class EventManager {
 
     public void initialize() {
         events = getSampleEvents();
+        //TODO: load from database
     }
 
+    public /*static*/ List<Event> queryRecommendedEvents() {
+        return getSampleEvents();
+        //TODO: actuallly ask server for new events
+    }
+
+    public void storeEvent(Event event) {
+        events.add(event);
+        //TODO: save event to database
+    }
 }

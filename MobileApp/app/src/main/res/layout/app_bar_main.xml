@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="f4"
+    android:fitsSystemWindows="false"
     tools:context="hackaton.waw.eventnotifier.MainActivity">
 
     <android.support.design.widget.AppBarLayout

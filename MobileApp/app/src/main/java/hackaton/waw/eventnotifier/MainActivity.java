@@ -1,5 +1,6 @@
 package hackaton.waw.eventnotifier;
 
+import android.app.IntentService;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -23,6 +24,7 @@ import hackaton.waw.eventnotifier.event.Event;
 import hackaton.waw.eventnotifier.event.EventDetailsFragment;
 import hackaton.waw.eventnotifier.event.EventListFragment;
 import hackaton.waw.eventnotifier.event.EventManager;
+import hackaton.waw.eventnotifier.event.EventQueryIntentService;
 import hackaton.waw.eventnotifier.user.UserInfoFragment;
 import lombok.Getter;
 import lombok.Setter;
@@ -70,6 +72,9 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         setStatusBarTranslucent(true);
+
+        Intent serviceIntent = new Intent(this, EventQueryIntentService.class);
+        startService(serviceIntent);
     }
 
     @Override

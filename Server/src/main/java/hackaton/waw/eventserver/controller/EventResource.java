@@ -29,6 +29,7 @@ public class EventResource {
     public Event getSampleEvent() {
         Event event = new Event();
         event.setName("sample event");
+        event.setDescription("test description of test event. tom is a stupid niggur.");
         event.setLocation(new LocationResource().getSampleLocation());
         return event;
     }

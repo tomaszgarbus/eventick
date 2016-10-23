@@ -113,7 +113,7 @@ public class MainActivity extends AppCompatActivity
             Intent alarmIntent = new Intent(this, EventAlarmReceiver.class);
             PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, alarmIntent, 0);
             AlarmManager alarmManager =  (AlarmManager)getSystemService(Context.ALARM_SERVICE);
-            alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, 10000, 60000, pendingIntent);
+            alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, 10000, 3600000, pendingIntent);
         }
     }
 

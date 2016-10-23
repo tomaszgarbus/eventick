@@ -185,7 +185,7 @@ public class EventManager {
         } else {
             events = Collections.synchronizedList(new ArrayList<Event>());
         }
-        events.addAll(eventDao.queryForAll());
+        events.addAll(eventDao.queryBuilder().orderBy("date", true).query());
         Iterator<Event> iter = events.iterator();
         while (iter.hasNext()) {
             Event event = iter.next();
@@ -205,9 +205,14 @@ public class EventManager {
     }
 
     public /*static*/ List<Event> queryRecommendedEvents() {
-        Event event1 = FacebookEventFetcher.getFacebookEvent("247854448900392");
-        Event event2 = FacebookEventFetcher.getFacebookEvent("1833100426935753");
-        return Arrays.asList(event1, event2);
+        Event event1 = FacebookEventFetcher.getFacebookEvent("1968572576702697");
+        Event event2 = FacebookEventFetcher.getFacebookEvent("1802718633280217");
+        Event event3 = FacebookEventFetcher.getFacebookEvent("1798419067053418");
+        Event event4 = FacebookEventFetcher.getFacebookEvent("1734050926845064");
+        Event event5 = FacebookEventFetcher.getFacebookEvent("566271660224526");
+        Event event6 = FacebookEventFetcher.getFacebookEvent("1079890835393690");
+
+        return Collections.synchronizedList(Arrays.asList(event1, event2, event3, event4, event5, event6));
     }
 
     public void storeEvent(Event event) {

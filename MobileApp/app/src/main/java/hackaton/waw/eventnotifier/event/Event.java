@@ -59,13 +59,13 @@ public class Event {
     private Date date;
 
     private static String formatToTodayOrTomorrow(Date date) {
-        String str = new SimpleDateFormat("EEE hh:mma").format(date);
+        String str = new SimpleDateFormat("EEE HH:mm").format(date);
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         Calendar today = Calendar.getInstance();
         Calendar tomorrow = Calendar.getInstance();
         tomorrow.add(Calendar.DATE, 1);
-        DateFormat timeFormatter = new SimpleDateFormat("hh:mma");
+        DateFormat timeFormatter = new SimpleDateFormat("HH:mm");
 
         if (calendar.get(Calendar.YEAR) == today.get(Calendar.YEAR) && calendar.get(Calendar.DAY_OF_YEAR) == today.get(Calendar.DAY_OF_YEAR)) {
             return "Today " + timeFormatter.format(date);

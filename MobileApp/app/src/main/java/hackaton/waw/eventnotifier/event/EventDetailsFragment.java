@@ -27,7 +27,7 @@ import lombok.Setter;
 public class EventDetailsFragment extends Fragment implements OnMapReadyCallback {
     private OnFragmentInteractionListener mListener;
     private Event event;
-    private TextView eventNameTextView, eventDescriptionTextView, eventLocationTextView;
+    private TextView eventNameTextView, eventDescriptionTextView, eventLocationTextView, eventTimeTextView;
     private ImageView eventPictureImageView;
 
     public EventDetailsFragment() {
@@ -78,9 +78,11 @@ public class EventDetailsFragment extends Fragment implements OnMapReadyCallback
         eventDescriptionTextView = (TextView) view.findViewById(R.id.text_view_event_description);
         eventLocationTextView = (TextView) view.findViewById(R.id.text_view_event_location);
         eventPictureImageView = (ImageView) view.findViewById(R.id.image_view_event_pictue);
+        eventTimeTextView = (TextView) view.findViewById(R.id.text_view_event_time);
 
         eventNameTextView.setText(event.getName());
         eventDescriptionTextView.setText(event.getDescription());
+        eventTimeTextView.setText(event.getDisplayableDate());
         if (event.getLocation() != null) {
             eventLocationTextView.setText(event.getLocation().getName());
         }

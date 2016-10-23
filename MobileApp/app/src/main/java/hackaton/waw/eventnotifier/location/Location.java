@@ -14,7 +14,6 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@AllArgsConstructor
 @DatabaseTable(tableName = "loc")
 public class Location {
 

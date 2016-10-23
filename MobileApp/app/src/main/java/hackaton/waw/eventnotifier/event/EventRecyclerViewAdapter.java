@@ -36,6 +36,9 @@ public class EventRecyclerViewAdapter extends RecyclerView.Adapter<EventRecycler
         if (events.get(position).getLocation() != null) {
             holder.mContentView.setText(events.get(position).getLocation().getName());
         }
+        if (events.get(position).getDate() != null) {
+            holder.mDateView.setText(events.get(position).getDisplayableDate());
+        }
         if (events.get(position).getPicture() != null) {
             holder.mImageView.setImageBitmap(events.get(position).getPicture());
         }
@@ -61,6 +64,7 @@ public class EventRecyclerViewAdapter extends RecyclerView.Adapter<EventRecycler
         public final View mView;
         public final TextView mIdView;
         public final TextView mContentView;
+        public final TextView mDateView;
         public final ImageView mImageView;
         public Event mItem;
 
@@ -69,6 +73,7 @@ public class EventRecyclerViewAdapter extends RecyclerView.Adapter<EventRecycler
             mView = view;
             mIdView = (TextView) view.findViewById(R.id.id);
             mContentView = (TextView) view.findViewById(R.id.content);
+            mDateView = (TextView) view.findViewById(R.id.date);
             mImageView = (ImageView) view.findViewById(R.id.image_view_event_miniature);
         }
 

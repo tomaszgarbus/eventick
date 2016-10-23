@@ -78,6 +78,7 @@ public class EventDetailsFragment extends Fragment implements OnMapReadyCallback
         eventDescriptionTextView = (TextView) view.findViewById(R.id.text_view_event_description);
         eventLocationTextView = (TextView) view.findViewById(R.id.text_view_event_location);
         eventPictureImageView = (ImageView) view.findViewById(R.id.image_view_event_pictue);
+
         eventNameTextView.setText(event.getName());
         eventDescriptionTextView.setText(event.getDescription());
         if (event.getLocation() != null) {

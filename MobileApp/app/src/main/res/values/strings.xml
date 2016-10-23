@@ -4,6 +4,8 @@
     <string name="facebook_app_id">1669615200018065</string>
 
     <string name="new_event_in_warsaw">Nowe wydarzenie w Warszawie!</string>
+    <string name="today">Today</string>
+    <string name="tomorrow">Tomorrow</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Test nazwy DLUGA NAZWA 1234</string>

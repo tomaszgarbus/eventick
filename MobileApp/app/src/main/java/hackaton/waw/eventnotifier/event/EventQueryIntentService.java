@@ -8,6 +8,7 @@ import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.content.Context;
 import android.graphics.Color;
+import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
 
 
@@ -19,6 +20,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
+import hackaton.waw.eventnotifier.MainActivity;
 import hackaton.waw.eventnotifier.R;
 import hackaton.waw.eventnotifier.db.DBHelper;
 
@@ -31,11 +33,17 @@ public class EventQueryIntentService extends IntentService {
     }
 
     public void notifyAboutEvent(Event event) {
+        Uri uri = new Uri.Builder().appendQueryParameter("id", event.getId().toString())
+                .appendEncodedPath("event").build();
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.setData(uri);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
         NotificationCompat.Builder notifBuilder = new NotificationCompat.Builder(this)
                 .setColor(Color.CYAN)
                 .setContentTitle(getString(R.string.new_event_in_warsaw))
                 .setContentText(event.getName())
-                .setSmallIcon(R.drawable.placeholder);
+                .setSmallIcon(R.drawable.placeholder)
+                .setContentIntent(pendingIntent);
         if (event.getPicture() != null) notifBuilder.setLargeIcon(event.getPicture());
         NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         manager.notify(new Random().nextInt(), notifBuilder.build());

@@ -25,6 +25,7 @@ public class EventResource {
 	@Autowired EventRepository eventRepository;
 	
     @RequestMapping(value = "/sample", method = RequestMethod.GET)
+
     public Event getSampleEvent() {
         Event event = new Event();
         event.setName("sample event");

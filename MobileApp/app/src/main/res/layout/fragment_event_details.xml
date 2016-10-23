@@ -47,24 +47,64 @@
                         android:text="@string/hello_blank_fragment"
                         android:ellipsize="end"
                         android:scrollHorizontally="true"
-                        android:singleLine="true"
                         android:id="@+id/text_view_event_name"
                         android:layout_marginLeft="@dimen/text_margin"
                         android:layout_marginTop="@dimen/text_margin"
-                        android:layout_marginBottom="@dimen/text_margin"
-                        android:maxLength="20"/>
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentBottom="true"
-                        android:layout_alignParentRight="true"
-                        android:textColor="#ffffff"
-                        android:textSize="15dp"
-                        android:layout_margin="@dimen/text_margin"
-                        android:text="@string/hello_blank_fragment"
-                        android:id="@+id/text_view_event_location"/>
+                        android:layout_marginBottom="@dimen/text_margin" />
 
                 </RelativeLayout>
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:paddingTop="10dp">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:textColor="#000"
+                        android:textSize="25dp"
+                        android:src="@drawable/clock"
+                        android:width="10dp"
+                        android:layout_marginRight="5dp"/>
+
+                    <TextView
+                        android:layout_height="match_parent"
+                        android:textColor="#000"
+                        android:textSize="15dp"
+                        android:layout_width="0dp"
+                        android:text="22:00 Wed"
+                        android:id="@+id/text_view_event_time"
+                        android:layout_weight="1" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp">
+
+                    <android.support.v7.widget.AppCompatImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:textColor="#000"
+                        android:src="@drawable/place_pin"
+                        android:width="10dp"
+                        android:layout_marginRight="5dp"/>
+
+                    <TextView
+                        android:layout_height="match_parent"
+                        android:textColor="#000"
+                        android:textSize="15dp"
+                        android:layout_width="0dp"
+                        android:text="@string/hello_blank_fragment"
+                        android:id="@+id/text_view_event_location"
+                        android:layout_weight="1" />
+
+                </LinearLayout>
 
                 <LinearLayout
                     android:orientation="horizontal"

@@ -5,6 +5,8 @@ import android.app.IntentService;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -15,14 +17,23 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.WindowManager;
+import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookSdk;
+import com.facebook.GraphRequestAsyncTask;
+import com.facebook.Profile;
 import com.facebook.appevents.AppEventsLogger;
 import com.facebook.login.LoginManager;
+import com.facebook.login.widget.ProfilePictureView;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 
+import java.io.IOException;
+import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
 
@@ -62,7 +73,6 @@ public class MainActivity extends AppCompatActivity
         callbackManager = CallbackManager.Factory.create();
         AppEventsLogger.activateApp(this);
         LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("public_profile"));
-
         eventManager = new EventManager(dbHelper);
 
         setContentView(R.layout.activity_main);
@@ -82,6 +92,16 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         setStatusBarTranslucent(true);
+
+
+        if(AccessToken.getCurrentAccessToken() != null){
+            View headerView = navigationView.inflateHeaderView(R.layout.nav_header_main);
+            ProfilePictureView profilePictureView;
+            profilePictureView = (ProfilePictureView) headerView.findViewById(R.id.image);
+            profilePictureView.setProfileId(AccessToken.getCurrentAccessToken().getUserId());
+            TextView name = (TextView) headerView.findViewById(R.id.name);
+            name.setText(Profile.getCurrentProfile().getName());
+        }
 
         if (getIntent().getData() != null) {
             if (getIntent().getData().getEncodedPath().equals("/event")) {
@@ -169,4 +189,5 @@ public class MainActivity extends AppCompatActivity
         super.onActivityResult(requestCode, resultCode, data);
         callbackManager.onActivityResult(requestCode, resultCode, data);
     }
+
 }

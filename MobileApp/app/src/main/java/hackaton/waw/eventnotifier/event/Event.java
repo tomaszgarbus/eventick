@@ -6,7 +6,11 @@ import com.google.android.gms.maps.model.LatLng;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -17,6 +21,8 @@ import hackaton.waw.eventnotifier.location.Location;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+
+import static hackaton.waw.eventnotifier.event.EventManager.FacebookEventFetcher.bitmapFromCoverSource;
 
 /**
  * Created by tomek on 10/18/16.
@@ -45,7 +51,7 @@ public class Event {
     private String pictureURL;
     public void setPictureURL(String pictureURL) {
         this.pictureURL = pictureURL;
-        this.picture = EventManager.FacebookEventFetcher.bitmapFromCoverSource(pictureURL);
+        this.picture = bitmapFromCoverSource(pictureURL);
 
     }
 
@@ -72,5 +78,45 @@ public class Event {
 
     public String getDisplayableDate() {
         return formatToTodayOrTomorrow(date);
+    }
+
+
+    public void parseJSON(JSONObject json) {
+        this.setLocation(new Location());
+        try {
+            if (json.has("name")) {
+                this.setName(json.getString("name"));
+            }
+            if (json.has("description")) {
+                this.setDescription(json.getString("description"));
+            }
+            if (json.has("cover")) {
+                String source = json.getJSONObject("cover").getString("source");
+                this.setPictureURL(source);
+                this.setPicture(bitmapFromCoverSource(source));
+            }
+            if (json.has("start_time")) {
+                String str = json.getString("start_time");
+                System.out.println(str);
+                DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
+                try {
+                    Date date = df.parse(str);
+                    this.setDate(date);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (json.has("place")) {
+                this.getLocation().setName(json.getJSONObject("place").getString("name"));
+                if (json.getJSONObject("place").getJSONObject("location").has("latitude") &&
+                        json.getJSONObject("place").getJSONObject("location").has("longitude")) {
+                    double latitude = json.getJSONObject("place").getJSONObject("location").getDouble("latitude");
+                    double longitude = json.getJSONObject("place").getJSONObject("location").getDouble("longitude");
+                    this.getLocation().setLatLng(new LatLng(latitude, longitude));
+                }
+            }
+        } catch (JSONException e) {
+
+        }
     }
 }

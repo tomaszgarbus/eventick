@@ -27,6 +27,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Scanner;
 import java.util.concurrent.ExecutionException;
 
 import hackaton.waw.eventnotifier.MainActivity;
@@ -60,6 +61,31 @@ public class EventManager {
         }
     }
 
+    public static class ServerConnection {
+        private JSONObject getJSON(final URL url) {
+            AsyncTask<URL, Integer, JSONObject> asyncTask = new AsyncTask<URL, Integer, JSONObject>() {
+                @Override
+                protected JSONObject doInBackground(URL... params) {
+                    try {
+                        Scanner scanner = new Scanner(url.openStream());
+                        String s = scanner.nextLine();
+                        JSONObject json = new JSONObject(s);
+                        return json;
+                    } catch (Exception e) {
+                        return null;
+                    }
+                }
+            };
+            try {
+                return asyncTask.execute(url).get();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+    };
 
     public static class FacebookEventFetcher {
 
@@ -99,43 +125,8 @@ public class EventManager {
                         @Override
                         public void onCompleted(GraphResponse response) {
                             System.out.print(response.toString());
-                            try {
-                                JSONObject json = response.getJSONObject();
-                                if (json.has("name")) {
-                                    event.setName(json.getString("name"));
-                                }
-                                if (json.has("description")) {
-                                    event.setDescription(json.getString("description"));
-                                }
-                                if (json.has("cover")) {
-                                    String source = json.getJSONObject("cover").getString("source");
-                                    event.setPictureURL(source);
-                                    event.setPicture(bitmapFromCoverSource(source));
-                                }
-                                if (json.has("start_time")) {
-                                    String str = json.getString("start_time");
-                                    System.out.println(str);
-                                    DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
-                                    try {
-                                        Date date = df.parse(str);
-                                        event.setDate(date);
-                                    } catch (ParseException e) {
-                                        e.printStackTrace();
-                                    }
-                                }
-                                if (json.has("place")) {
-                                    event.getLocation().setName(json.getJSONObject("place").getString("name"));
-                                    if (json.getJSONObject("place").getJSONObject("location").has("latitude") &&
-                                            json.getJSONObject("place").getJSONObject("location").has("longitude")) {
-                                        double latitude = json.getJSONObject("place").getJSONObject("location").getDouble("latitude");
-                                        double longitude = json.getJSONObject("place").getJSONObject("location").getDouble("longitude");
-                                        event.getLocation().setLatLng(new LatLng(latitude, longitude));
-                                    }
-                                }
-
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
+                            JSONObject json = response.getJSONObject();
+                            event.parseJSON(json);
                             System.out.println(response.getJSONObject().toString());
                         }
                     });

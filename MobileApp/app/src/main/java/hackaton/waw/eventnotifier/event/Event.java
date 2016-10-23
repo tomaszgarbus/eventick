@@ -45,6 +45,7 @@ public class Event {
 
     }
 
+
     @DatabaseField
     private Date date;
 

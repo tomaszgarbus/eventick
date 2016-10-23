@@ -17,10 +17,12 @@ import org.json.JSONObject;
 
 import java.net.URL;
 import java.sql.SQLException;
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -77,7 +79,7 @@ public class EventManager {
                 }
             };
             try {
-                return asyncTask.execute().get(); //not really async, get(() waits for result
+                return asyncTask.execute().get(); //not really async, get() waits for result
             } catch (InterruptedException e) {
                 e.printStackTrace();
             } catch (ExecutionException e) {
@@ -88,7 +90,7 @@ public class EventManager {
 
         private static GraphRequest createGraphRequest(String eventId, final Event event) {
             GraphRequest request = new GraphRequest(AccessToken.getCurrentAccessToken(),
-                    "/" + eventId + "?fields=name,description,place,cover,type",
+                    "/" + eventId + "?fields=name,description,place,cover,type,start_time",
                     null,
                     HttpMethod.GET,
                     new GraphRequest.Callback() {
@@ -109,7 +111,8 @@ public class EventManager {
                                     event.setPicture(bitmapFromCoverSource(source));
                                 }
                                 if (json.has("start_time")) {
-                                    System.out.print(json.getString("start_time"));
+                                    String str = json.getString("start_time");
+                                    //TODO: parse date
                                 }
                                 if (json.has("place")) {
                                     event.getLocation().setName(json.getJSONObject("place").getString("name"));
@@ -183,6 +186,11 @@ public class EventManager {
             events = Collections.synchronizedList(new ArrayList<Event>());
         }
         events.addAll(eventDao.queryForAll());
+        Iterator<Event> iter = events.iterator();
+        while (iter.hasNext()) {
+            Event event = iter.next();
+            event.setPicture(FacebookEventFetcher.bitmapFromCoverSource(event.getPictureURL()));
+        }
     }
 
     public /*static*/ List<Event> queryRecommendedEvents() {

@@ -78,6 +78,10 @@ public class EventListFragment extends Fragment {
         if (listview instanceof RecyclerView) {
             Context context = view.getContext();
             recyclerView = (RecyclerView) listview;
+            //recyclerView.setHasFixedSize(true);
+            ((MainActivity)getActivity()).setMRecyclerView(recyclerView);
+            ((MainActivity)getActivity()).setUpSwiping();
+            //((MainActivity)getActivity()).setUpItemTouchHelper();
             if (mColumnCount <= 1) {
                 recyclerView.setLayoutManager(new LinearLayoutManager(context));
             } else {

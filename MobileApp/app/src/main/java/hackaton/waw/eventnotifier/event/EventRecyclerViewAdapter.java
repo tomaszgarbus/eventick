@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import hackaton.waw.eventnotifier.MainActivity;
 import hackaton.waw.eventnotifier.event.EventListFragment.OnListFragmentInteractionListener;
 import hackaton.waw.eventnotifier.R;
 
@@ -26,6 +27,7 @@ public class EventRecyclerViewAdapter extends RecyclerView.Adapter<EventRecycler
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.fragment_event, parent, false);
+
         return new ViewHolder(view);
     }
 
@@ -58,6 +60,11 @@ public class EventRecyclerViewAdapter extends RecyclerView.Adapter<EventRecycler
     @Override
     public int getItemCount() {
         return events.size();
+    }
+
+    public void remove(int position) {
+        this.events.remove(position);
+        notifyItemRemoved(position);
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

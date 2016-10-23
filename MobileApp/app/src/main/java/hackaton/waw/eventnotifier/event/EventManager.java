@@ -211,8 +211,9 @@ public class EventManager {
         Event event4 = FacebookEventFetcher.getFacebookEvent("1734050926845064");
         Event event5 = FacebookEventFetcher.getFacebookEvent("566271660224526");
         Event event6 = FacebookEventFetcher.getFacebookEvent("1079890835393690");
+        Event event7 = FacebookEventFetcher.getFacebookEvent("1663797783949795");
 
-        return Collections.synchronizedList(Arrays.asList(event1, event2, event3, event4, event5, event6));
+        return Collections.synchronizedList(Arrays.asList(event1, event2, event3, event4, event5, event6, event7));
     }
 
     public boolean storeEvent(Event event) {

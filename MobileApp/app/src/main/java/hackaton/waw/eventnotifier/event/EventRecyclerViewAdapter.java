@@ -15,12 +15,14 @@ import java.util.List;
 
 public class EventRecyclerViewAdapter extends RecyclerView.Adapter<EventRecyclerViewAdapter.ViewHolder> {
 
+    private EventManager eventManager;
     private final List<Event> events;
     private final OnListFragmentInteractionListener mListener;
 
-    public EventRecyclerViewAdapter(List<Event> items, OnListFragmentInteractionListener listener) {
-        events = items;
-        mListener = listener;
+    public EventRecyclerViewAdapter(EventManager eventManager, OnListFragmentInteractionListener listener) {
+        this.eventManager = eventManager;
+        this.events = eventManager.getEvents();
+        this.mListener = listener;
     }
 
     @Override
@@ -63,7 +65,9 @@ public class EventRecyclerViewAdapter extends RecyclerView.Adapter<EventRecycler
     }
 
     public void remove(int position) {
-        this.events.remove(position);
+        Long id = events.get(position).getId();
+        events.remove(position);
+        eventManager.deleteEvent(id);
         notifyItemRemoved(position);
     }
 

@@ -204,6 +204,14 @@ public class EventManager {
         return null;
     }
 
+    public void deleteEvent(Long id) {
+        try {
+            eventDao.deleteById(id);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     public /*static*/ List<Event> queryRecommendedEvents() {
         Event event1 = FacebookEventFetcher.getFacebookEvent("1968572576702697");
         Event event2 = FacebookEventFetcher.getFacebookEvent("1802718633280217");

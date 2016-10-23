@@ -78,16 +78,14 @@ public class EventListFragment extends Fragment {
         if (listview instanceof RecyclerView) {
             Context context = view.getContext();
             recyclerView = (RecyclerView) listview;
-            //recyclerView.setHasFixedSize(true);
             ((MainActivity)getActivity()).setMRecyclerView(recyclerView);
             ((MainActivity)getActivity()).setUpSwiping();
-            //((MainActivity)getActivity()).setUpItemTouchHelper();
             if (mColumnCount <= 1) {
                 recyclerView.setLayoutManager(new LinearLayoutManager(context));
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            recyclerView.setAdapter(new EventRecyclerViewAdapter(((MainActivity)getActivity()).getEventManager().getEvents(), mListener));
+            recyclerView.setAdapter(new EventRecyclerViewAdapter(((MainActivity)getActivity()).getEventManager(), mListener));
         }
         return view;
     }

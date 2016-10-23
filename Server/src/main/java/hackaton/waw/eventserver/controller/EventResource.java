@@ -40,7 +40,7 @@ public class EventResource {
     	return event;
     }
     
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/{someID}", method = RequestMethod.GET)
     public Event getEventById(@PathVariable(value="someID") Long id) {
     	return eventRepository.findOne(id);
     }

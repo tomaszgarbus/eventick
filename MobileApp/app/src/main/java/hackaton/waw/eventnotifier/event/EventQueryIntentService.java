@@ -62,6 +62,9 @@ public class EventQueryIntentService extends IntentService {
             Iterator<Event> iter = newEvents.iterator();
             while (iter.hasNext()) {
                 Event event = iter.next();
+                if (event == null) {
+                    continue;
+                }
                 System.out.println("eloszki");
                 try {
                     eventManager.storeEvent(event);

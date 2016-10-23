@@ -209,7 +209,10 @@ public class EventManager {
         Event event2 = FacebookEventFetcher.getFacebookEvent("1802718633280217");
         Event event3 = FacebookEventFetcher.getFacebookEvent("1798419067053418");
         Event event4 = FacebookEventFetcher.getFacebookEvent("1734050926845064");
-        return Collections.synchronizedList(Arrays.asList(event1, event2, event3, event4));
+        Event event5 = FacebookEventFetcher.getFacebookEvent("566271660224526");
+        Event event6 = FacebookEventFetcher.getFacebookEvent("1079890835393690");
+
+        return Collections.synchronizedList(Arrays.asList(event1, event2, event3, event4, event5, event6));
     }
 
     public void storeEvent(Event event) throws SQLException {

@@ -35,8 +35,9 @@ public class EventResource {
     
     
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public void addEvent(@RequestBody Event event) {
+    public Event addEvent(@RequestBody Event event) {
     	eventRepository.save(event);
+    	return event;
     }
     
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)

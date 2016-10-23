@@ -215,14 +215,13 @@ public class EventManager {
         return Collections.synchronizedList(Arrays.asList(event1, event2, event3, event4, event5, event6));
     }
 
-    public void storeEvent(Event event) {
+    public boolean storeEvent(Event event) {
         try {
             eventDao.create(event);
         } catch (SQLException e) {
             e.printStackTrace();
+            return false;
         }
-        //eventDao.commit(dbHelper.getConnectionSource().getReadWriteConnection());
-        //locDao.commit(dbHelper.getConnectionSource().getReadWriteConnection());
-        //TODO: update
+        return true;
     }
 }

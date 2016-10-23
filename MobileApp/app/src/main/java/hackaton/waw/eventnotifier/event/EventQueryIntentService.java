@@ -66,8 +66,9 @@ public class EventQueryIntentService extends IntentService {
                     continue;
                 }
                 System.out.println("eloszki");
-                eventManager.storeEvent(event);
-                notifyAboutEvent(event);
+                if (eventManager.storeEvent(event)) {
+                    notifyAboutEvent(event);
+                }
             }
         }
 

@@ -18,6 +18,8 @@ import org.json.JSONObject;
 import java.net.URL;
 import java.sql.SQLException;
 import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -112,7 +114,14 @@ public class EventManager {
                                 }
                                 if (json.has("start_time")) {
                                     String str = json.getString("start_time");
-                                    //TODO: parse date
+                                    System.out.println(str);
+                                    DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
+                                    try {
+                                        Date date = df.parse(str);
+                                        event.setDate(date);
+                                    } catch (ParseException e) {
+                                        e.printStackTrace();
+                                    }
                                 }
                                 if (json.has("place")) {
                                     event.getLocation().setName(json.getJSONObject("place").getString("name"));
@@ -193,9 +202,21 @@ public class EventManager {
         }
     }
 
+    public Event findEventById(Long id) {
+        Iterator<Event> iter = events.iterator();
+        while (iter.hasNext()) {
+            Event e = iter.next();
+            if (e.getId() == id) {
+                return e;
+            }
+        }
+        return null;
+    }
+
     public /*static*/ List<Event> queryRecommendedEvents() {
         Event event1 = FacebookEventFetcher.getFacebookEvent("247854448900392");
-        return Arrays.asList(event1);
+        Event event2 = FacebookEventFetcher.getFacebookEvent("1833100426935753");
+        return Arrays.asList(event1, event2);
     }
 
     public void storeEvent(Event event) throws SQLException {

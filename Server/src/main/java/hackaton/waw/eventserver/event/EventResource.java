@@ -15,6 +15,7 @@ import static org.springframework.http.HttpMethod.GET;
 @RequestMapping("events")
 public class EventResource {
     @RequestMapping(value = "/sample", method = RequestMethod.GET)
+
     public Event getSampleEvent() {
         Event event = new Event();
         event.setName("sample event");

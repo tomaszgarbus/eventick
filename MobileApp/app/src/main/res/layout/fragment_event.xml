@@ -40,11 +40,10 @@
         android:layout_height="wrap_content"
         android:textAppearance="?attr/textAppearanceListItem"
         android:textColor="#ffffff"
-        android:layout_alignBottom="@+id/id"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
         android:layout_marginRight="11dp"
-        android:layout_marginEnd="11dp" />
+        android:layout_marginTop="11dp" />
 
     <TextView
         android:id="@+id/date"
@@ -54,9 +53,9 @@
         android:layout_height="wrap_content"
         android:textAppearance="?attr/textAppearanceListItem"
         android:textColor="#ffffff"
-        android:layout_marginRight="11dp"
-        android:layout_marginBottom="5dp"
-        android:layout_above="@id/content"
-        android:layout_alignParentRight="true" />
+        android:layout_marginLeft="11dp"
+        android:layout_marginTop="11dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"/>
 
 </RelativeLayout>

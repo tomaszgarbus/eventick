@@ -108,4 +108,7 @@ public class EventListFragment extends Fragment {
     public interface OnListFragmentInteractionListener {
         void onListFragmentInteraction(Event item);
     }
+
+
+
 }

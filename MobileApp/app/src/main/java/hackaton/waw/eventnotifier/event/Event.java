@@ -11,6 +11,7 @@ import java.util.Date;
 import java.util.List;
 
 import hackaton.waw.eventnotifier.location.Location;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -20,6 +21,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
+@AllArgsConstructor
 @DatabaseTable(tableName = "event")
 public class Event {
 

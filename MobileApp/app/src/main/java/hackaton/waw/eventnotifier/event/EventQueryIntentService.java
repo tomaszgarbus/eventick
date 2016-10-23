@@ -63,11 +63,7 @@ public class EventQueryIntentService extends IntentService {
             while (iter.hasNext()) {
                 Event event = iter.next();
                 System.out.println("eloszki");
-                try {
-                    eventManager.storeEvent(event);
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
+                eventManager.storeEvent(event);
                 notifyAboutEvent(event);
             }
         }

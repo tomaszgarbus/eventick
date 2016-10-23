@@ -210,8 +210,12 @@ public class EventManager {
         return Arrays.asList(event1, event2);
     }
 
-    public void storeEvent(Event event) throws SQLException {
-        eventDao.create(event);
+    public void storeEvent(Event event) {
+        try {
+            eventDao.create(event);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         //eventDao.commit(dbHelper.getConnectionSource().getReadWriteConnection());
         //locDao.commit(dbHelper.getConnectionSource().getReadWriteConnection());
         //TODO: update

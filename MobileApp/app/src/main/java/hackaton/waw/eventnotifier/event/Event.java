@@ -36,10 +36,10 @@ public class Event {
     @DatabaseField(generatedId = true)
     private Long id;
 
-    @DatabaseField
+    @DatabaseField(uniqueCombo = true)
     private String name;
 
-    @DatabaseField
+    @DatabaseField(uniqueCombo = true)
     private String description;
 
     @DatabaseField(foreign = true, foreignAutoCreate = true, foreignAutoRefresh = true)
@@ -47,7 +47,7 @@ public class Event {
 
     private Bitmap picture;
 
-    @DatabaseField(useGetSet = true)
+    @DatabaseField(useGetSet = true, uniqueCombo = true)
     private String pictureURL;
     public void setPictureURL(String pictureURL) {
         this.pictureURL = pictureURL;

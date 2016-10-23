@@ -1,7 +1,8 @@
-package hackaton.waw.eventserver.event;
+package hackaton.waw.eventserver.controller;
 
-import hackaton.waw.eventserver.location.Location;
-import hackaton.waw.eventserver.location.LocationResource;
+import hackaton.waw.eventserver.model.Event;
+import hackaton.waw.eventserver.model.Location;
+
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;

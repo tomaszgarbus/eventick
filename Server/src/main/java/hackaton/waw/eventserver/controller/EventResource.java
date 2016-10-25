@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import static org.springframework.http.HttpMethod.GET;
 
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -25,13 +26,17 @@ public class EventResource {
 	@Autowired EventRepository eventRepository;
 	
     @RequestMapping(value = "/sample", method = RequestMethod.GET)
-
     public Event getSampleEvent() {
         Event event = new Event();
         event.setName("sample event");
         event.setDescription("test description of test event. tom is a stupid niggur.");
         event.setLocation(new LocationResource().getSampleLocation());
         return event;
+    }
+    
+    @RequestMapping(value = "/all", method = RequestMethod.GET)
+    public List<Event> getAllEvents() {
+    	return eventRepository.findAll();
     }
     
     

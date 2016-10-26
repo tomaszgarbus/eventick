@@ -1,11 +1,13 @@
 package hackaton.waw.eventserver.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.annotation.Secured;
 
 import hackaton.waw.eventserver.model.Event;
 import hackaton.waw.eventserver.model.Location;
@@ -17,8 +19,9 @@ import hackaton.waw.eventserver.repo.LocationRepository;
  */
 
 @RestController
+@Component
 @RequestMapping("locations")
-public class LocationResource {
+public class LocationController {
 	
 	@Autowired LocationRepository locationRepository;
 	

@@ -14,6 +14,7 @@ import javax.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.security.access.annotation.Secured;
 
 /**
  * Created by tomek on 10/18/16.

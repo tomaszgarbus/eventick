@@ -8,9 +8,7 @@ import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @SpringBootApplication
-@EntityScan(basePackages = {"hackaton.waw.eventserver.controller","hackaton.waw.eventserver.model" })
 @EnableJpaRepositories(basePackages = {"hackaton.waw.eventserver.repo"})
-//@EnableAutoConfiguration(exclude={DataSourceAutoConfiguration.class})
 public class ServerApplication {
 
 	public static void main(String[] args) {

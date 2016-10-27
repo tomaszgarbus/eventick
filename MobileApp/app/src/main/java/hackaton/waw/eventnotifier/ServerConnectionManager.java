@@ -76,20 +76,27 @@ public class ServerConnectionManager {
         @Override
         protected Boolean doInBackground(AccessToken... params) {
             HttpClient httpclient = new DefaultHttpClient();
-            HttpPost httppost = new HttpPost("https://"+context.getString(R.string.server_address)+"/login");
+            HttpPost httppost = new HttpPost("http://"+context.getString(R.string.server_address)+"/login");
 
             try {
                 //add data
                 List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(1);
+                System.out.println("1");
                 nameValuePairs.add(new BasicNameValuePair("userId", params[0].getUserId()));
+                System.out.println("2");
                 nameValuePairs.add(new BasicNameValuePair("accessToken", params[0].getToken()));
+                System.out.println("3");
                 httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+                System.out.println("4");
                 //execute http post
                 HttpResponse response = httpclient.execute(httppost);
+                System.out.println("5");
                 return true;
             } catch (ClientProtocolException e) {
+                e.printStackTrace();
                 return false;
             } catch (IOException e) {
+                e.printStackTrace();
                 return false;
             }
         }

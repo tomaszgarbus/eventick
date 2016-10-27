@@ -23,7 +23,8 @@ import hackaton.waw.eventserver.repo.LocationRepository;
 @RequestMapping("locations")
 public class LocationController {
 	
-	@Autowired LocationRepository locationRepository;
+	@Autowired
+    LocationRepository locationRepository;
 	
     @RequestMapping(value = "sample", method = RequestMethod.GET)
     public Location getSampleLocation() {
@@ -33,13 +34,13 @@ public class LocationController {
     }     
     
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public Location addEvent(@RequestBody Location location) {
+    public Location addLocation(@RequestBody Location location) {
     	locationRepository.save(location);
     	return location;
     }
     
     @RequestMapping(value = "/{someID}", method = RequestMethod.GET)
-    public Location getEventById(@PathVariable(value="someID") Long id) {
+    public Location getLocationById(@PathVariable(value="someID") Long id) {
     	return locationRepository.findOne(id);
     }
 }

@@ -9,7 +9,7 @@ import org.springframework.social.facebook.api.Facebook;
  */
 @Getter
 @Setter
-public class LoginBean  {
-    private String facebookToken;
-
+public class LoginBean {
+    private String userId;
+    private String accessToken;
 }

@@ -1,5 +1,8 @@
 package hackaton.waw.eventserver.authentication;
 
+import com.restfb.DefaultFacebookClient;
+import com.restfb.FacebookClient;
+import com.restfb.Version;
 import hackaton.waw.eventserver.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -8,6 +11,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.social.facebook.api.Facebook;
+import org.springframework.social.facebook.api.GraphApi;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -19,23 +24,28 @@ import java.util.Collection;
 @Component
 public class CustomAuthenticationProvider implements AuthenticationProvider {
 
-    public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-        String username = authentication.getName();
-        String password = (String) authentication.getCredentials();
-
-        if (false) {
-            //TODO: actually check username
-            throw new BadCredentialsException("Username not found.");
+    private boolean verifyAccessToken(String userId, String accessToken) {
+        Version apiVersion = Version.VERSION_2_8;
+        FacebookClient facebookClient = new DefaultFacebookClient(accessToken, apiVersion);
+        com.restfb.types.User object = (com.restfb.types.User) facebookClient.fetchObject("me", com.restfb.types.User.class);
+        if (object.getId() != userId) {
+            return false;
         }
+        return true;
+    }
 
-        if (false) {
-            //TODO: actually check password
-            throw new BadCredentialsException("Wrong password.");
+    public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+        //TODO: consider using class extending Authentication
+        String userId = authentication.getName();
+        String accessToken = (String) authentication.getCredentials();
+
+        if (verifyAccessToken(userId, accessToken)) {
+            throw new BadCredentialsException("access token not working");
         }
 
         Collection<? extends GrantedAuthority> authorities = new ArrayList<>();
 
-        return new UsernamePasswordAuthenticationToken(new User(), password, authorities);
+        return new UsernamePasswordAuthenticationToken(new User(), accessToken, authorities);
     }
 
     public boolean supports(Class<?> arg0) {

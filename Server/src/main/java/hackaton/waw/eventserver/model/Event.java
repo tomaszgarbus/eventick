@@ -11,9 +11,11 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import hackaton.waw.eventserver.repo.LocationRepository;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 
 /**
@@ -32,8 +34,11 @@ public class Event {
 	@Column(name="id")
     private Long id;
 
+    private String facebookId;
+
     private String name;
 
+    @Column(length = 10000)
     private String description;
 
     @ManyToOne
@@ -43,5 +48,17 @@ public class Event {
     private String pictureURL;
 
     private Date date;
+
+    public static Event fromFacebookEvent(org.springframework.social.facebook.api.Event fbEvent) {
+        Event event = new Event();
+        event.setLocation(new Location());
+        event.setFacebookId(fbEvent.getId());
+        event.setName(fbEvent.getName());
+        event.setDescription(fbEvent.getDescription());
+        if (fbEvent.getCover() != null) {
+            event.setPictureURL(fbEvent.getCover().getSource());
+        }
+        return event;
+    }
 
 }

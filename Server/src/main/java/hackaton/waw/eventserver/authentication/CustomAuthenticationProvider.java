@@ -34,7 +34,11 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         if (!object.getId().equals(userId)) {
             return false;
         }
-        //eventController.crawlUserRecommendedEvents(facebookClient);
+        try {
+            eventController.crawlUserRecommendedEvents(userId, accessToken);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return true;
     }
 

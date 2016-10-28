@@ -14,6 +14,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.facebook.AccessToken;
+import com.j256.ormlite.android.apptools.OpenHelperManager;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -35,13 +36,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Scanner;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 
+import hackaton.waw.eventnotifier.db.DBHelper;
 import hackaton.waw.eventnotifier.event.Event;
+import hackaton.waw.eventnotifier.event.EventManager;
+import hackaton.waw.eventnotifier.event.EventQueryIntentService;
 import lombok.Getter;
 import lombok.Setter;
 
 import static android.R.attr.data;
+import static hackaton.waw.eventnotifier.NotificationManager.notifyAboutEvent;
 
 /**
  * Created by tomek on 10/25/16.
@@ -51,12 +57,15 @@ public class ServerConnectionManager {
 
     private Context context;
     private HttpClient httpClient;
+    private EventManager eventManager;
     private HttpClientStack httpClientStack;
 
     public ServerConnectionManager(Context context) {
         this.context = context;
         httpClient = new DefaultHttpClient();
         httpClientStack = new HttpClientStack(httpClient);
+        DBHelper dbHelper = OpenHelperManager.getHelper(context, DBHelper.class);
+        eventManager = new EventManager(dbHelper);
     }
 
     @Getter
@@ -145,13 +154,25 @@ public class ServerConnectionManager {
         }
     }
 
-    public JSONObject getRecommendedEvents() {
+    public void getRecommendedEvents() {
         RequestQueue queue = Volley.newRequestQueue(context, httpClientStack);
         String url = "http://"+context.getString(R.string.server_address)+"/events/recommended";
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 System.out.println(response);
+                try {
+                    JSONArray jsonArray = new JSONArray(response);
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        JSONObject jsonObject = jsonArray.getJSONObject(i);
+                        Event event = Event.fromJSON(jsonObject);
+                        if (eventManager.storeEvent(event)) {
+                            notifyAboutEvent(context, event);
+                        }
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
         }, new Response.ErrorListener() {
             @Override
@@ -160,6 +181,5 @@ public class ServerConnectionManager {
             }
         });
         queue.add(stringRequest);
-        return null;
     }
 }

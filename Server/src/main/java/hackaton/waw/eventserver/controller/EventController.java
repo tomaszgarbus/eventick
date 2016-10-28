@@ -6,6 +6,10 @@ import com.restfb.Parameter;
 import hackaton.waw.eventserver.model.Event;
 import hackaton.waw.eventserver.repo.EventRepository;
 
+import hackaton.waw.eventserver.repo.LocationRepository;
+import org.springframework.social.facebook.api.Facebook;
+import org.springframework.social.facebook.api.PagingParameters;
+import org.springframework.social.facebook.api.impl.FacebookTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -26,6 +31,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class EventController {
 	
 	@Autowired EventRepository eventRepository;
+    @Autowired LocationRepository locationRepository;
 	
     @RequestMapping(value = "/sample", method = RequestMethod.GET)
     public Event getSampleEvent() {
@@ -54,10 +60,17 @@ public class EventController {
 
     @RequestMapping(value = "/recommended", method = RequestMethod.GET)
     public List<Event> getRecommendedEvents() {
-        return Arrays.asList(getSampleEvent());
+        return eventRepository.findAll();
     }
     
-    public void crawlUserRecommendedEvents(FacebookClient facebookClient) {
-        facebookClient.fetchObject("search?q=*&type=event", com.restfb.types.Event.class);
+    public void crawlUserRecommendedEvents(String userId, String accessToken) {
+        Facebook facebook = new FacebookTemplate(accessToken);
+        List<org.springframework.social.facebook.api.Event> events =
+                facebook.eventOperations().search("*", new PagingParameters(2, 0, new Long(0), Long.MAX_VALUE));
+        for (org.springframework.social.facebook.api.Event fbEvent : events) {
+            Event event = Event.fromFacebookEvent(fbEvent);
+            locationRepository.save(event.getLocation());
+            eventRepository.save(event);
+        }
     }
 }

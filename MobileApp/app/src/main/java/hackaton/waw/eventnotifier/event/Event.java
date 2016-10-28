@@ -80,6 +80,11 @@ public class Event {
         return formatToTodayOrTomorrow(date);
     }
 
+    public static Event fromJSON(JSONObject json) {
+        Event event = new Event();
+        event.parseJSON(json);
+        return event;
+    }
 
     public void parseJSON(JSONObject json) {
         this.setLocation(new Location());

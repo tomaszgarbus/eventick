@@ -3,6 +3,7 @@ package hackaton.waw.eventserver.authentication;
 import com.restfb.DefaultFacebookClient;
 import com.restfb.FacebookClient;
 import com.restfb.Version;
+import hackaton.waw.eventserver.controller.EventController;
 import hackaton.waw.eventserver.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -23,14 +24,17 @@ import java.util.Collection;
  */
 @Component
 public class CustomAuthenticationProvider implements AuthenticationProvider {
+    @Autowired
+    EventController eventController;
 
     private boolean verifyAccessToken(String userId, String accessToken) {
         Version apiVersion = Version.VERSION_2_8;
         FacebookClient facebookClient = new DefaultFacebookClient(accessToken, apiVersion);
         com.restfb.types.User object = (com.restfb.types.User) facebookClient.fetchObject("me", com.restfb.types.User.class);
-        if (object.getId() != userId) {
+        if (!object.getId().equals(userId)) {
             return false;
         }
+        //eventController.crawlUserRecommendedEvents(facebookClient);
         return true;
     }
 
@@ -39,7 +43,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         String userId = authentication.getName();
         String accessToken = (String) authentication.getCredentials();
 
-        if (verifyAccessToken(userId, accessToken)) {
+        if (!verifyAccessToken(userId, accessToken)) {
             throw new BadCredentialsException("access token not working");
         }
 

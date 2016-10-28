@@ -1,5 +1,6 @@
 package hackaton.waw.eventnotifier;
 
+import android.annotation.TargetApi;
 import android.app.AlarmManager;
 import android.app.IntentService;
 import android.app.PendingIntent;
@@ -10,6 +11,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -28,18 +30,26 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.facebook.AccessToken;
+import com.facebook.AccessTokenTracker;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookSdk;
+import com.facebook.GraphRequest;
 import com.facebook.GraphRequestAsyncTask;
+import com.facebook.GraphResponse;
+import com.facebook.HttpMethod;
 import com.facebook.Profile;
 import com.facebook.appevents.AppEventsLogger;
 import com.facebook.login.LoginManager;
 import com.facebook.login.widget.ProfilePictureView;
 import com.github.brnunes.swipeablerecyclerview.SwipeableRecyclerViewTouchListener;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.net.URL;
@@ -57,6 +67,7 @@ import hackaton.waw.eventnotifier.event.EventRecyclerViewAdapter;
 import hackaton.waw.eventnotifier.user.UserInfoFragment;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.core.Main;
 
 @Getter
 @Setter
@@ -65,6 +76,7 @@ public class MainActivity extends AppCompatActivity
 
     private CallbackManager callbackManager;
     private EventManager eventManager;
+    private ServerConnectionManager serverConnectionManager;
     public DBHelper dbHelper;
     private RecyclerView mRecyclerView;
 
@@ -83,6 +95,8 @@ public class MainActivity extends AppCompatActivity
         FacebookSdk.sdkInitialize(this);
         callbackManager = CallbackManager.Factory.create();
         AppEventsLogger.activateApp(this);
+
+        setUpAccessTokenTracker();
         LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("public_profile"));
         eventManager = new EventManager(dbHelper);
 
@@ -99,20 +113,8 @@ public class MainActivity extends AppCompatActivity
 
         getFragmentManager().beginTransaction().replace(R.id.content_main, MainFragment.newInstance()).commit();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-
         setStatusBarTranslucent(true);
 
-
-        if(AccessToken.getCurrentAccessToken() != null){
-            View headerView = navigationView.inflateHeaderView(R.layout.nav_header_main);
-            ProfilePictureView profilePictureView;
-            profilePictureView = (ProfilePictureView) headerView.findViewById(R.id.image);
-            profilePictureView.setProfileId(AccessToken.getCurrentAccessToken().getUserId());
-            TextView name = (TextView) headerView.findViewById(R.id.name);
-            name.setText(Profile.getCurrentProfile().getName());
-        }
 
         if (getIntent().getData() != null) {
             if (getIntent().getData().getEncodedPath().equals("/event")) {
@@ -126,6 +128,62 @@ public class MainActivity extends AppCompatActivity
             AlarmManager alarmManager =  (AlarmManager)getSystemService(Context.ALARM_SERVICE);
             alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, 10000, 10000, pendingIntent);
         }
+    }
+
+    private void setUpAccessTokenTracker() {
+        new AccessTokenTracker() {
+
+            @Override
+            protected void onCurrentAccessTokenChanged(AccessToken oldAccessToken, AccessToken currentAccessToken) {
+                if (currentAccessToken != null) {
+                    setUpProfilePictureView();
+                    setUpCoverPhotho();
+
+                    serverConnectionManager = new ServerConnectionManager(getApplicationContext());
+                    serverConnectionManager.authenticate(currentAccessToken);
+                    serverConnectionManager.getRecommendedEvents();
+                }
+            }
+        }.startTracking();
+    }
+
+    private void setUpProfilePictureView() {
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+        if (AccessToken.getCurrentAccessToken() != null){
+            View headerView = navigationView.inflateHeaderView(R.layout.nav_header_main);
+            ProfilePictureView profilePictureView;
+            profilePictureView = (ProfilePictureView) headerView.findViewById(R.id.image);
+            profilePictureView.setProfileId(AccessToken.getCurrentAccessToken().getUserId());
+            TextView name = (TextView) headerView.findViewById(R.id.name);
+            name.setText(Profile.getCurrentProfile().getName());
+        }
+    }
+
+    @TargetApi(value = 16)
+    private void setUpCoverPhotho() {
+        final LinearLayout layout = (LinearLayout)findViewById(R.id.layout_nav_header);
+        new GraphRequest(
+                AccessToken.getCurrentAccessToken(),
+                "/me?fields=cover",
+                null,
+                HttpMethod.GET,
+                new GraphRequest.Callback() {
+                    public void onCompleted(GraphResponse response) {
+                        JSONObject json = response.getJSONObject();
+                        try {
+                            if (!json.has("cover") || !json.getJSONObject("cover").has("source")) {
+                                return;
+                            }
+                            String source = json.getJSONObject("cover").getString("source");
+                            Bitmap photo = EventManager.FacebookEventFetcher.bitmapFromCoverSource(source);
+                            layout.setBackground(new BitmapDrawable(getResources(), photo));
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+        ).executeAsync();
     }
 
     @Override

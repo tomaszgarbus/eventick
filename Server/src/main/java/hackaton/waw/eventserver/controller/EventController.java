@@ -1,5 +1,8 @@
 package hackaton.waw.eventserver.controller;
 
+import com.restfb.DefaultFacebookClient;
+import com.restfb.FacebookClient;
+import com.restfb.Parameter;
 import hackaton.waw.eventserver.model.Event;
 import hackaton.waw.eventserver.repo.EventRepository;
 
@@ -10,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Arrays;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -37,7 +41,6 @@ public class EventController {
     	return eventRepository.findAll();
     }
     
-    
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     public Event addEvent(@RequestBody Event event) {
     	eventRepository.save(event);
@@ -48,6 +51,13 @@ public class EventController {
     public Event getEventById(@PathVariable(value="someID") Long id) {
     	return eventRepository.findOne(id);
     }
+
+    @RequestMapping(value = "/recommended", method = RequestMethod.GET)
+    public List<Event> getRecommendedEvents() {
+        return Arrays.asList(getSampleEvent());
+    }
     
-    
+    public void crawlUserRecommendedEvents(FacebookClient facebookClient) {
+        facebookClient.fetchObject("search?q=*&type=event", com.restfb.types.Event.class);
+    }
 }

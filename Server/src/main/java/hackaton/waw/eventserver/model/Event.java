@@ -2,14 +2,7 @@ package hackaton.waw.eventserver.model;
 
 import java.util.Date;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import hackaton.waw.eventserver.repo.LocationRepository;
 import lombok.AllArgsConstructor;
@@ -25,7 +18,7 @@ import org.springframework.security.access.annotation.Secured;
 @Getter
 @Setter
 @Entity
-@Table(name = "events")
+@Table(name = "events", uniqueConstraints = { @UniqueConstraint(columnNames = {"name", "description", "date"}) })
 //@AllArgsConstructor
 public class Event {
 
@@ -55,6 +48,7 @@ public class Event {
         event.setFacebookId(fbEvent.getId());
         event.setName(fbEvent.getName());
         event.setDescription(fbEvent.getDescription());
+        event.setDate(fbEvent.getStartTime());
         if (fbEvent.getCover() != null) {
             event.setPictureURL(fbEvent.getCover().getSource());
         }

@@ -2,12 +2,7 @@ package hackaton.waw.eventserver.model;
 
 import java.util.Date;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -20,7 +15,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "locations")
+//@Table(name = "locations", uniqueConstraints = { @UniqueConstraint(columnNames = {"name"}), @UniqueConstraint(columnNames = {"lat", "lng"}) })
 //@AllArgsConstructor
 public class Location {
 

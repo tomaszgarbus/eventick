@@ -11,6 +11,7 @@ import org.springframework.social.facebook.api.Facebook;
 import org.springframework.social.facebook.api.PagingParameters;
 import org.springframework.social.facebook.api.impl.FacebookTemplate;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -69,6 +70,7 @@ public class EventController {
                 facebook.eventOperations().search("*", new PagingParameters(2, 0, new Long(0), Long.MAX_VALUE));
         for (org.springframework.social.facebook.api.Event fbEvent : events) {
             Event event = Event.fromFacebookEvent(fbEvent);
+            facebook.eventOperations().getEventImage(event.getFacebookId());
             locationRepository.save(event.getLocation());
             eventRepository.save(event);
         }

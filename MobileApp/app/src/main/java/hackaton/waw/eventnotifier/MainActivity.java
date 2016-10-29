@@ -115,19 +115,26 @@ public class MainActivity extends AppCompatActivity
 
         setStatusBarTranslucent(true);
 
-
         if (getIntent().getData() != null) {
             if (getIntent().getData().getEncodedPath().equals("/event")) {
-                Long id = Long.parseLong(getIntent().getData().getQueryParameter("id"));
-                Event event = eventManager.findEventById(id);
-                getFragmentManager().beginTransaction().replace(R.id.content_main, EventDetailsFragment.newInstance(event)).commit();
+                loadEventFromNotification();
             }
         } else {
-            Intent alarmIntent = new Intent(this, EventAlarmReceiver.class);
-            PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, alarmIntent, 0);
-            AlarmManager alarmManager =  (AlarmManager)getSystemService(Context.ALARM_SERVICE);
-            alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, 100000, 100000, pendingIntent);
+            setUpAlarmManager();
         }
+    }
+
+    private void loadEventFromNotification() {
+        Long id = Long.parseLong(getIntent().getData().getQueryParameter("id"));
+        Event event = eventManager.findEventById(id);
+        getFragmentManager().beginTransaction().replace(R.id.content_main, EventDetailsFragment.newInstance(event)).commit();
+    }
+
+    private void setUpAlarmManager() {
+        Intent alarmIntent = new Intent(this, EventAlarmReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, alarmIntent, 0);
+        AlarmManager alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, 100000, 100000, pendingIntent);
     }
 
     private void setUpAccessTokenTracker() {

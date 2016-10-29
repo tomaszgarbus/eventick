@@ -82,7 +82,9 @@ public class EventDetailsFragment extends Fragment implements OnMapReadyCallback
 
         eventNameTextView.setText(event.getName());
         eventDescriptionTextView.setText(event.getDescription());
-        eventTimeTextView.setText(event.getDisplayableDate());
+        if (event.getDate() != null) {
+            eventTimeTextView.setText(event.getDisplayableDate());
+        }
         if (event.getLocation() != null) {
             eventLocationTextView.setText(event.getLocation().getName());
         }

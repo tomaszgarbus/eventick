@@ -68,13 +68,6 @@ public class ServerConnectionManager {
         eventManager = new EventManager(dbHelper);
     }
 
-    @Getter
-    @Setter
-    public class LoginBean {
-        private String userId;
-        private String facebookToken;
-    }
-
     private JSONObject getJSON(final URL url) {
         AsyncTask<URL, Integer, JSONObject> asyncTask = new AsyncTask<URL, Integer, JSONObject>() {
             @Override

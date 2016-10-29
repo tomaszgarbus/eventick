@@ -3,10 +3,13 @@ package hackaton.waw.eventserver.controller;
 import com.restfb.DefaultFacebookClient;
 import com.restfb.FacebookClient;
 import com.restfb.Parameter;
+import com.restfb.Version;
+import com.restfb.json.JsonObject;
 import hackaton.waw.eventserver.model.Event;
 import hackaton.waw.eventserver.repo.EventRepository;
 
 import hackaton.waw.eventserver.repo.LocationRepository;
+import org.json.JSONObject;
 import org.springframework.social.facebook.api.Facebook;
 import org.springframework.social.facebook.api.PagingParameters;
 import org.springframework.social.facebook.api.impl.FacebookTemplate;
@@ -66,11 +69,13 @@ public class EventController {
     
     public void crawlUserRecommendedEvents(String userId, String accessToken) {
         Facebook facebook = new FacebookTemplate(accessToken);
+        ((FacebookTemplate)facebook).setApiVersion("2.8");
         List<org.springframework.social.facebook.api.Event> events =
                 facebook.eventOperations().search("*", new PagingParameters(2, 0, new Long(0), Long.MAX_VALUE));
         for (org.springframework.social.facebook.api.Event fbEvent : events) {
             Event event = Event.fromFacebookEvent(fbEvent);
-            facebook.eventOperations().getEventImage(event.getFacebookId());
+            String pictureURL = new JSONObject(facebook.fetchObject(fbEvent.getId(), String.class, "cover")).getJSONObject("cover").getString("source");
+            event.setPictureURL(pictureURL);
             locationRepository.save(event.getLocation());
             eventRepository.save(event);
         }

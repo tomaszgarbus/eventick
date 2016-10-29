@@ -101,7 +101,10 @@ public class Event {
                 this.setPicture(bitmapFromCoverSource(source));
             }
             if (json.has("start_time")) {
-                String str = json.getString("start_time");
+                Date date = new Date(json.getLong("start_time"));
+                this.setDate(date);
+                // Server sends hopefully date as long
+                /*String str = json.getString("start_time");
                 System.out.println(str);
                 DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
                 try {
@@ -109,7 +112,7 @@ public class Event {
                     this.setDate(date);
                 } catch (ParseException e) {
                     e.printStackTrace();
-                }
+                }*/
             }
             if (json.has("place")) {
                 this.getLocation().setName(json.getJSONObject("place").getString("name"));

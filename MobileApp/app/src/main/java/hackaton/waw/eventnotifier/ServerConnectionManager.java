@@ -133,7 +133,7 @@ public class ServerConnectionManager {
         @Override
         protected List<Event> doInBackground(Object... params) {
             HttpClient httpclient = new DefaultHttpClient();
-            String url = "http://"+context.getString(R.string.server_address)+"/events/recommended";
+            String url = "http://" + context.getString(R.string.server_address) + "/events/recommended";
             HttpGet httpGet = new HttpGet(url);
 
             try {
@@ -149,7 +149,8 @@ public class ServerConnectionManager {
 
     public void getRecommendedEvents() {
         RequestQueue queue = Volley.newRequestQueue(context, httpClientStack);
-        String url = "http://"+context.getString(R.string.server_address)+"/events/recommended";
+        String userId = AccessToken.getCurrentAccessToken().getUserId();
+        String url = "http://" + context.getString(R.string.server_address) + "/recommendations/" + userId;
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {

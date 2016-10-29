@@ -54,8 +54,8 @@ public class EventController {
     	return event;
     }
     
-    @RequestMapping(value = "/{someID}", method = RequestMethod.GET)
-    public Event getEventById(@PathVariable(value="someID") Long id) {
+    @RequestMapping(value = "/{event_id}", method = RequestMethod.GET)
+    public Event getEventById(@PathVariable(value="event_id") Long id) {
     	return eventRepository.findOne(id);
     }
 

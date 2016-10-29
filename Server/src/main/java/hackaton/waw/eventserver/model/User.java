@@ -21,7 +21,7 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
     @Column(name="id")
-    String id;
+    Long id;
 
     @OneToMany(fetch = FetchType.LAZY)
     private List<Recommendation> recommendations;

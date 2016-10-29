@@ -7,6 +7,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.util.Collection;
+import java.util.List;
 
 /**
  * Created by tomek on 10/26/16.
@@ -21,6 +22,9 @@ public class User implements UserDetails {
     @GeneratedValue(strategy= GenerationType.AUTO)
     @Column(name="id")
     String id;
+
+    @OneToMany(fetch = FetchType.LAZY)
+    private List<Recommendation> recommendations;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

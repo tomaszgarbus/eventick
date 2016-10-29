@@ -1,6 +1,7 @@
 package hackaton.waw.eventserver.model;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.*;
 
@@ -33,6 +34,9 @@ public class Event {
 
     @Column(length = 10000)
     private String description;
+
+    @OneToMany(fetch = FetchType.LAZY)
+    private List<Recommendation> recommendations;
 
     @ManyToOne
     @JoinColumn(name = "location_id")

@@ -114,7 +114,7 @@
                     <ImageButton
                         android:text="Button"
                         android:layout_height="wrap_content"
-                        android:id="@+id/like"
+                        android:id="@+id/button_like"
                         android:layout_width="0dp"
                         android:src="@drawable/nice"
                         android:backgroundTint="@color/button_bg"
@@ -124,7 +124,7 @@
                         android:text="Button"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:id="@+id/dislike"
+                        android:id="@+id/button_dislike"
                         android:src="@drawable/sad"
                         android:backgroundTint="@color/button_bg"
                         android:layout_weight="1"/>
@@ -132,7 +132,7 @@
                         android:text="Button"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:id="@+id/share"
+                        android:id="@+id/button_share"
                         android:src="@drawable/share"
                         android:backgroundTint="@color/button_bg"
                         android:layout_weight="1"/>
@@ -140,7 +140,7 @@
                         android:text="Button"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:id="@+id/participate"
+                        android:id="@+id/button_participate"
                         android:src="@drawable/check"
                         android:backgroundTint="@color/button_bg"
                         android:layout_weight="1"/>

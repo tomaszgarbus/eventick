@@ -9,6 +9,7 @@ import android.support.annotation.RequiresApi;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -25,10 +26,11 @@ import lombok.Setter;
 @Getter
 @Setter
 public class EventDetailsFragment extends Fragment implements OnMapReadyCallback {
-    private OnFragmentInteractionListener mListener;
+    //private OnFragmentInteractionListener mListener;
     private Event event;
     private TextView eventNameTextView, eventDescriptionTextView, eventLocationTextView, eventTimeTextView;
     private ImageView eventPictureImageView;
+    private ImageButton likeButton, dislikeButton, shareButton, participateButton;
 
     public EventDetailsFragment() {
         // Required empty public constructor
@@ -79,9 +81,24 @@ public class EventDetailsFragment extends Fragment implements OnMapReadyCallback
         eventLocationTextView = (TextView) view.findViewById(R.id.text_view_event_location);
         eventPictureImageView = (ImageView) view.findViewById(R.id.image_view_event_pictue);
         eventTimeTextView = (TextView) view.findViewById(R.id.text_view_event_time);
+        likeButton = (ImageButton) view.findViewById(R.id.button_like);
+        dislikeButton = (ImageButton) view.findViewById(R.id.button_dislike);
+        shareButton = (ImageButton) view.findViewById(R.id.button_share);
+        participateButton = (ImageButton) view.findViewById(R.id.button_participate);
 
-        eventNameTextView.setText(event.getName());
-        eventDescriptionTextView.setText(event.getDescription());
+        likeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                
+            }
+        });
+
+        if (event.getName() != null) {
+            eventNameTextView.setText(event.getName());
+        }
+        if (event.getDescription() != null) {
+            eventDescriptionTextView.setText(event.getDescription());
+        }
         if (event.getDate() != null) {
             eventTimeTextView.setText(event.getDisplayableDate());
         }
@@ -98,31 +115,21 @@ public class EventDetailsFragment extends Fragment implements OnMapReadyCallback
         return view;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
+//        if (context instanceof OnFragmentInteractionListener) {
+//            mListener = (OnFragmentInteractionListener) context;
+//        } else {
+//            throw new RuntimeException(context.toString()
+//                    + " must implement OnFragmentInteractionListener");
+//        }
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
+        //mListener = null;
     }
 
-    public interface OnFragmentInteractionListener {
-        void onFragmentInteraction(Uri uri);
-    }
 }

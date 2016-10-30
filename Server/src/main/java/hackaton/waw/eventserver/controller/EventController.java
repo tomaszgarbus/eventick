@@ -66,18 +66,5 @@ public class EventController {
     public List<Event> getRecommendedEvents() {
         return eventRepository.findAll();
     }
-    
-    public void crawlUserRecommendedEvents(String userId, String accessToken) {
-        Facebook facebook = new FacebookTemplate(accessToken);
-        ((FacebookTemplate)facebook).setApiVersion("2.8");
-        List<org.springframework.social.facebook.api.Event> events =
-                facebook.eventOperations().search("*", new PagingParameters(2, 0, new Long(0), Long.MAX_VALUE));
-        for (org.springframework.social.facebook.api.Event fbEvent : events) {
-            Event event = Event.fromFacebookEvent(fbEvent);
-            String pictureURL = new JSONObject(facebook.fetchObject(fbEvent.getId(), String.class, "cover")).getJSONObject("cover").getString("source");
-            event.setPictureURL(pictureURL);
-            locationRepository.save(event.getLocation());
-            eventRepository.save(event);
-        }
-    }
+
 }

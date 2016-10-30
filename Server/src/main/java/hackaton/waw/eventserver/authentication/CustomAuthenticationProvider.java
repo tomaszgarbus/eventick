@@ -3,8 +3,10 @@ package hackaton.waw.eventserver.authentication;
 import com.restfb.DefaultFacebookClient;
 import com.restfb.FacebookClient;
 import com.restfb.Version;
+import hackaton.waw.eventserver.FacebookEventCrawler;
 import hackaton.waw.eventserver.controller.EventController;
 import hackaton.waw.eventserver.model.User;
+import hackaton.waw.eventserver.service.EventService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -15,6 +17,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.social.facebook.api.Facebook;
 import org.springframework.social.facebook.api.GraphApi;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -27,6 +30,9 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
     @Autowired
     EventController eventController;
 
+    @Autowired
+    EventService eventService;
+
     private boolean verifyAccessToken(String userId, String accessToken) {
         Version apiVersion = Version.VERSION_2_8;
         FacebookClient facebookClient = new DefaultFacebookClient(accessToken, apiVersion);
@@ -34,8 +40,10 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         if (!object.getId().equals(userId)) {
             return false;
         }
+
+        //Crawl events in the meantime
         try {
-            eventController.crawlUserRecommendedEvents(userId, accessToken);
+            eventService.crawlFacebookEvents(userId, accessToken);
         } catch (Exception e) {
             e.printStackTrace();
         }

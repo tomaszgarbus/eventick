@@ -7,6 +7,7 @@ import javax.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.social.facebook.api.Place;
 
 /**
  * Created by tomek on 10/18/16.
@@ -32,5 +33,18 @@ public class Location {
 
     public Location() {
         name = "";
+    }
+
+    public static Location fromFacebookPlace(Place place) {
+        if (place == null) {
+            return null;
+        }
+        Location location = new Location();
+        location.setName(place.getName());
+        if (place.getLocation() != null) {
+            location.setLat(place.getLocation().getLatitude());
+            location.setLng(place.getLocation().getLongitude());
+        }
+        return location;
     }
 }

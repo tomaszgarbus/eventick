@@ -95,13 +95,13 @@ public class Event {
             if (json.has("description")) {
                 this.setDescription(json.getString("description"));
             }
-            if (json.has("cover")) {
-                String source = json.getJSONObject("cover").getString("source");
+            if (json.has("pictureURL")) {
+                String source = json.getString("pictureURL");
                 this.setPictureURL(source);
                 this.setPicture(bitmapFromCoverSource(source));
             }
-            if (json.has("start_time")) {
-                Date date = new Date(json.getLong("start_time"));
+            if (json.has("date")) {
+                Date date = new Date(json.getLong("date"));
                 this.setDate(date);
                 // Server sends hopefully date as long
                 /*String str = json.getString("start_time");
@@ -114,12 +114,12 @@ public class Event {
                     e.printStackTrace();
                 }*/
             }
-            if (json.has("place")) {
-                this.getLocation().setName(json.getJSONObject("place").getString("name"));
-                if (json.getJSONObject("place").getJSONObject("location").has("latitude") &&
-                        json.getJSONObject("place").getJSONObject("location").has("longitude")) {
-                    double latitude = json.getJSONObject("place").getJSONObject("location").getDouble("latitude");
-                    double longitude = json.getJSONObject("place").getJSONObject("location").getDouble("longitude");
+            if (json.has("location")) {
+                this.getLocation().setName(json.getJSONObject("location").getString("name"));
+                if (json.getJSONObject("location").has("lat") &&
+                        json.getJSONObject("location").has("lng")) {
+                    double latitude = json.getJSONObject("location").getDouble("lat");
+                    double longitude = json.getJSONObject("location").getDouble("lng");
                     this.getLocation().setLatLng(new LatLng(latitude, longitude));
                 }
             }

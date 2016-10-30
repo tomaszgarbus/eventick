@@ -128,29 +128,10 @@ public class ServerConnectionManager {
         return false;
     }
 
-    private class RecommendedEventsTask extends AsyncTask<Object, Integer, List<Event>> {
-
-        @Override
-        protected List<Event> doInBackground(Object... params) {
-            HttpClient httpclient = new DefaultHttpClient();
-            String url = "http://" + context.getString(R.string.server_address) + "/events/recommended";
-            HttpGet httpGet = new HttpGet(url);
-
-            try {
-
-
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-    }
-
     public void getRecommendedEvents() {
         RequestQueue queue = Volley.newRequestQueue(context, httpClientStack);
         String userId = AccessToken.getCurrentAccessToken().getUserId();
-        String url = "http://" + context.getString(R.string.server_address) + "/recommendations/" + userId;
+        String url = "http://" + context.getString(R.string.server_address) + "/recommendations/user/" + userId;
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -176,4 +157,5 @@ public class ServerConnectionManager {
         });
         queue.add(stringRequest);
     }
+
 }

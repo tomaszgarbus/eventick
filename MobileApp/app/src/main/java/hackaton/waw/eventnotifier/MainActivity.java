@@ -72,7 +72,7 @@ import lombok.core.Main;
 @Getter
 @Setter
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, EventListFragment.OnListFragmentInteractionListener, EventDetailsFragment.OnFragmentInteractionListener {
+        implements NavigationView.OnNavigationItemSelectedListener, EventListFragment.OnListFragmentInteractionListener {
 
     private CallbackManager callbackManager;
     private EventManager eventManager;
@@ -248,11 +248,6 @@ public class MainActivity extends AppCompatActivity
 
     public void loadUserInfoFragment() {
         getFragmentManager().beginTransaction().replace(R.id.content_main, UserInfoFragment.newInstance()).commit();
-    }
-
-    @Override
-    public void onFragmentInteraction(Uri uri) {
-
     }
 
     @Override

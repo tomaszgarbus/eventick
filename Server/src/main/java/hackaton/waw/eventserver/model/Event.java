@@ -19,7 +19,7 @@ import org.springframework.security.access.annotation.Secured;
 @Getter
 @Setter
 @Entity
-@Table(name = "events", uniqueConstraints = { @UniqueConstraint(columnNames = {"name", "description", "date"}) })
+@Table(name = "events", uniqueConstraints = { @UniqueConstraint(columnNames = {"name", "date"}) })
 //@AllArgsConstructor
 public class Event {
 
@@ -48,7 +48,8 @@ public class Event {
 
     public static Event fromFacebookEvent(org.springframework.social.facebook.api.Event fbEvent) {
         Event event = new Event();
-        event.setLocation(new Location());
+        Location location = Location.fromFacebookPlace(fbEvent.getPlace());
+        event.setLocation(location);
         event.setFacebookId(fbEvent.getId());
         event.setName(fbEvent.getName());
         event.setDescription(fbEvent.getDescription());

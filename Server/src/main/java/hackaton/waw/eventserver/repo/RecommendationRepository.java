@@ -16,4 +16,24 @@ public interface RecommendationRepository extends CrudRepository<Recommendation,
 
     Recommendation save(Recommendation persisted);
 
+    @Override
+    Recommendation findOne(Long aLong);
+
+    @Override
+    boolean exists(Long aLong);
+
+    @Override
+    Iterable<Recommendation> findAll(Iterable<Long> longs);
+
+    @Override
+    long count();
+
+    @Override
+    void delete(Long aLong);
+
+    @Override
+    void delete(Iterable<? extends Recommendation> entities);
+
+    @Override
+    void deleteAll();
 }

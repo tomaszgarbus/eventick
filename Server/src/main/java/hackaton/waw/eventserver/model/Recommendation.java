@@ -25,4 +25,10 @@ public class Recommendation {
     @OneToOne
     @JoinColumn(name = "event_id")
     private Event event;
+
+    private Boolean liked;
+
+    private Boolean disliked;
+
+    private Boolean interested;
 }

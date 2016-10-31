@@ -1,6 +1,7 @@
 package hackaton.waw.eventnotifier.event;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -60,6 +61,7 @@ public class EventListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         final SwipeRefreshLayout view = (SwipeRefreshLayout) inflater.inflate(R.layout.fragment_event_list, container, false);
+        view.setColorSchemeColors(Color.RED);
         view.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {

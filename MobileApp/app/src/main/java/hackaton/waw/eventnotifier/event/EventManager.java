@@ -5,6 +5,11 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.toolbox.ImageRequest;
+import com.android.volley.toolbox.RequestFuture;
+import com.android.volley.toolbox.Volley;
 import com.facebook.AccessToken;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
@@ -29,6 +34,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Scanner;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 
 import hackaton.waw.eventnotifier.MainActivity;
 import hackaton.waw.eventnotifier.db.DBHelper;
@@ -163,7 +169,7 @@ public class EventManager {
         Iterator<Event> iter = events.iterator();
         while (iter.hasNext()) {
             Event event = iter.next();
-            event.setPicture(FacebookEventFetcher.bitmapFromCoverSource(event.getPictureURL()));
+            //event.setPicture(FacebookEventFetcher.bitmapFromCoverSource(event.getPictureURL()));
         }
     }
 
@@ -180,6 +186,7 @@ public class EventManager {
 
     public void deleteEvent(Long id) {
         try {
+            locDao.deleteById(eventDao.queryForId(id).getLocation().getId());
             eventDao.deleteById(id);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -200,6 +207,7 @@ public class EventManager {
 
     public boolean storeEvent(Event event) {
         try {
+            locDao.create(event.getLocation());
             eventDao.create(event);
         } catch (SQLException e) {
             e.printStackTrace();

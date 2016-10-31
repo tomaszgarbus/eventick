@@ -4,6 +4,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
+import org.json.JSONObject;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -17,7 +19,7 @@ import lombok.Setter;
 @DatabaseTable(tableName = "loc")
 public class Location {
 
-    @DatabaseField(generatedId = true)
+    @DatabaseField(id = true)
     private Long id;
 
     @DatabaseField
@@ -47,5 +49,30 @@ public class Location {
         }
         lat = latLng.latitude;
         lng = latLng.longitude;
+    }
+
+    public void parseJSON(JSONObject json) {
+        try {
+            if (json.has("id")) {
+                this.setId(json.getLong("id"));
+            }
+            if (json.has("name")) {
+                this.setName(json.getString("name"));
+            }
+            if (json.has("lat")) {
+                this.setLat(json.getDouble("lat"));
+            }
+            if (json.has("lng")) {
+                this.setLng(json.getDouble("lng"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static Location fromJSON(JSONObject json) {
+        Location location = new Location();
+        location.parseJSON(json);
+        return location;
     }
 }

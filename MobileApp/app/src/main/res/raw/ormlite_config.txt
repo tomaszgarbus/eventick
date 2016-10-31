@@ -1,5 +1,5 @@
 #
-# generated on 2016/10/23 03:11:53
+# generated on 2016/10/31 07:42:13
 #
 # --table-start--
 dataClass=hackaton.waw.eventnotifier.event.Event
@@ -7,11 +7,14 @@ tableName=event
 # --table-fields-start--
 # --field-start--
 fieldName=id
-generatedId=true
+id=true
 # --field-end--
 # --field-start--
 fieldName=name
 uniqueCombo=true
+# --field-end--
+# --field-start--
+fieldName=ticketsUri
 # --field-end--
 # --field-start--
 fieldName=description
@@ -21,7 +24,15 @@ uniqueCombo=true
 fieldName=location
 foreign=true
 foreignAutoRefresh=true
-foreignAutoCreate=true
+# --field-end--
+# --field-start--
+fieldName=liked
+# --field-end--
+# --field-start--
+fieldName=disliked
+# --field-end--
+# --field-start--
+fieldName=interested
 # --field-end--
 # --field-start--
 fieldName=pictureURL
@@ -40,7 +51,7 @@ tableName=loc
 # --table-fields-start--
 # --field-start--
 fieldName=id
-generatedId=true
+id=true
 # --field-end--
 # --field-start--
 fieldName=name

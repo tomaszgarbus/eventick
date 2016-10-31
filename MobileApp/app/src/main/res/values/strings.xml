@@ -1,18 +1,21 @@
 <resources>
     <string name="app_name">EventNotifier</string>
-    <string name="server_address">192.168.43.68:8080</string>
+    <string name="server_address">192.168.1.118:8080</string>
     <string name="facebook_app_id">1669615200018065</string>
 
-    <string name="new_event_in_warsaw">Nowe wydarzenie w Warszawie!</string>
+    <string name="new_event_nearby">New event nearby!</string>
     <string name="today">Today</string>
     <string name="tomorrow">Tomorrow</string>
+    <string name="events">Events</string>
+    <string name="user_info">User info</string>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Test nazwy DLUGA NAZWA 1234</string>
+    <string name="hello_blank_fragment">Location name goes here</string>
     <string name="title_activity_main">Local events</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="rate_app">Rate us!</string>
 
     <string name="action_settings">Settings</string>
 </resources>

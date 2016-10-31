@@ -1,11 +1,14 @@
 package hackaton.waw.eventnotifier;
 
+import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.AlarmManager;
 import android.app.IntentService;
 import android.app.PendingIntent;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -14,9 +17,11 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -46,6 +51,9 @@ import com.facebook.appevents.AppEventsLogger;
 import com.facebook.login.LoginManager;
 import com.facebook.login.widget.ProfilePictureView;
 import com.github.brnunes.swipeablerecyclerview.SwipeableRecyclerViewTouchListener;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 
 import org.json.JSONException;
@@ -64,6 +72,7 @@ import hackaton.waw.eventnotifier.event.EventListFragment;
 import hackaton.waw.eventnotifier.event.EventManager;
 import hackaton.waw.eventnotifier.event.EventQueryIntentService;
 import hackaton.waw.eventnotifier.event.EventRecyclerViewAdapter;
+import hackaton.waw.eventnotifier.user.User;
 import hackaton.waw.eventnotifier.user.UserInfoFragment;
 import lombok.Getter;
 import lombok.Setter;
@@ -72,13 +81,15 @@ import lombok.core.Main;
 @Getter
 @Setter
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, EventListFragment.OnListFragmentInteractionListener {
+        implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, NavigationView.OnNavigationItemSelectedListener, EventListFragment.OnListFragmentInteractionListener {
 
     private CallbackManager callbackManager;
     private EventManager eventManager;
     private ServerConnectionManager serverConnectionManager;
-    public DBHelper dbHelper;
+    private DBHelper dbHelper;
     private RecyclerView mRecyclerView;
+    private BitmapCache bitmapCache;
+    private GoogleApiClient googleApiClient;
 
     protected void setStatusBarTranslucent(boolean makeTranslucent) {
         if (makeTranslucent) {
@@ -91,14 +102,20 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //Initialize Facebook and shit
         dbHelper = OpenHelperManager.getHelper(this, DBHelper.class);
         FacebookSdk.sdkInitialize(this);
         callbackManager = CallbackManager.Factory.create();
         AppEventsLogger.activateApp(this);
-
         setUpAccessTokenTracker();
         LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("public_profile"));
+
+
         eventManager = new EventManager(dbHelper);
+        bitmapCache = new BitmapCache();
+
+        //Ask for permision to external storage
+        requestPermissions();
 
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -122,6 +139,57 @@ public class MainActivity extends AppCompatActivity
         } else {
             setUpAlarmManager();
         }
+
+        setUpGoogleApiClient();
+    }
+
+    private void setUpGoogleApiClient() {
+        if (googleApiClient == null) {
+            googleApiClient = new GoogleApiClient.Builder(this)
+                    .addConnectionCallbacks(this)
+                    .addOnConnectionFailedListener(this)
+                    .addApi(LocationServices.API)
+                    .build();
+        }
+    }
+
+    private void requestPermissions() {
+        // Storage Permissions
+        final int REQUEST_EXTERNAL_STORAGE = 1;
+        final String[] PERMISSIONS_STORAGE = {
+                Manifest.permission.READ_EXTERNAL_STORAGE,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+        };
+
+        // Check if we have write permission
+        int permission = ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
+        if (permission != PackageManager.PERMISSION_GRANTED) {
+            // We don't have permission so prompt the user
+            ActivityCompat.requestPermissions(
+                    this,
+                    PERMISSIONS_STORAGE,
+                    REQUEST_EXTERNAL_STORAGE
+            );
+        }
+
+        // Location permissions
+        final int REQUEST_LOCATION = 2;
+        final String[] PERMISSIONS_LOCATION = {
+                Manifest.permission.ACCESS_COARSE_LOCATION
+        };
+
+        // Check if we have write permission
+        permission = ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION);
+
+        if (permission != PackageManager.PERMISSION_GRANTED) {
+            // We don't have permission so prompt the user
+            ActivityCompat.requestPermissions(
+                    this,
+                    PERMISSIONS_LOCATION,
+                    REQUEST_LOCATION
+            );
+        }
     }
 
     private void loadEventFromNotification() {
@@ -133,8 +201,8 @@ public class MainActivity extends AppCompatActivity
     private void setUpAlarmManager() {
         Intent alarmIntent = new Intent(this, EventAlarmReceiver.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, alarmIntent, 0);
-        AlarmManager alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
-        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, 100000, 100000, pendingIntent);
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, 1800000, 1800000, pendingIntent);
     }
 
     private void setUpAccessTokenTracker() {
@@ -148,7 +216,9 @@ public class MainActivity extends AppCompatActivity
 
                     serverConnectionManager = new ServerConnectionManager(getApplicationContext());
                     serverConnectionManager.authenticate(currentAccessToken);
+                    serverConnectionManager.setCurrentUserId();
                     serverConnectionManager.getRecommendedEvents();
+                    serverConnectionManager.setBitmapCache(bitmapCache);
                 }
             }
         }.startTracking();
@@ -157,7 +227,7 @@ public class MainActivity extends AppCompatActivity
     private void setUpProfilePictureView() {
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        if (AccessToken.getCurrentAccessToken() != null){
+        if (AccessToken.getCurrentAccessToken() != null) {
             View headerView = navigationView.inflateHeaderView(R.layout.nav_header_main);
             ProfilePictureView profilePictureView;
             profilePictureView = (ProfilePictureView) headerView.findViewById(R.id.image);
@@ -169,7 +239,7 @@ public class MainActivity extends AppCompatActivity
 
     @TargetApi(value = 16)
     private void setUpCoverPhotho() {
-        final LinearLayout layout = (LinearLayout)findViewById(R.id.layout_nav_header);
+        final LinearLayout layout = (LinearLayout) findViewById(R.id.layout_nav_header);
         new GraphRequest(
                 AccessToken.getCurrentAccessToken(),
                 "/me?fields=cover",
@@ -235,6 +305,14 @@ public class MainActivity extends AppCompatActivity
             loadMainFragment();
         } else if (id == R.id.nav_user_info) {
             loadUserInfoFragment();
+        } else if (id == R.id.nav_rate_app) {
+            Uri uri = Uri.parse("market://details?id=" + getPackageName());
+            Intent goToMarket = new Intent(Intent.ACTION_VIEW, uri);
+            try {
+                startActivity(goToMarket);
+            } catch (ActivityNotFoundException e) {
+                //UtilityClass.showAlertDialog(context, ERROR, "Couldn't launch the market", null, 0);
+            }
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -278,7 +356,7 @@ public class MainActivity extends AppCompatActivity
                             @Override
                             public void onDismissedBySwipeLeft(RecyclerView recyclerView, int[] reverseSortedPositions) {
                                 for (int position : reverseSortedPositions) {
-                                    ((EventRecyclerViewAdapter)mRecyclerView.getAdapter()).remove(position);
+                                    ((EventRecyclerViewAdapter) mRecyclerView.getAdapter()).remove(position);
                                     mRecyclerView.getAdapter().notifyItemRemoved(position);
                                 }
                                 mRecyclerView.getAdapter().notifyDataSetChanged();
@@ -287,7 +365,7 @@ public class MainActivity extends AppCompatActivity
                             @Override
                             public void onDismissedBySwipeRight(RecyclerView recyclerView, int[] reverseSortedPositions) {
                                 for (int position : reverseSortedPositions) {
-                                    ((EventRecyclerViewAdapter)mRecyclerView.getAdapter()).remove(position);
+                                    ((EventRecyclerViewAdapter) mRecyclerView.getAdapter()).remove(position);
                                     mRecyclerView.getAdapter().notifyItemRemoved(position);
                                 }
                                 mRecyclerView.getAdapter().notifyDataSetChanged();
@@ -297,4 +375,46 @@ public class MainActivity extends AppCompatActivity
         mRecyclerView.addOnItemTouchListener(swipeTouchListener);
     }
 
+    @Override
+    protected void onStart() {
+        googleApiClient.connect();
+        super.onStart();
+    }
+
+    @Override
+    protected void onStop() {
+        googleApiClient.disconnect();
+        super.onStop();
+    }
+
+    @Override
+    public void onConnected(Bundle bundle) {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        Location lastLocation = LocationServices.FusedLocationApi.getLastLocation(
+                googleApiClient);
+        if (lastLocation != null) {
+            serverConnectionManager.getUser().setLatitude(lastLocation.getLatitude());
+            serverConnectionManager.getUser().setLongitude(lastLocation.getLongitude());
+            serverConnectionManager.sendUserLocation();
+        }
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+
+    }
 }

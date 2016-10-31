@@ -2,14 +2,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="hackaton.waw.eventnotifier.event.EventDetailsFragment">
 
     <!-- TODO: Update blank fragment layout -->
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
-
 
         <LinearLayout
             android:orientation="vertical"
@@ -26,7 +25,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="200dp"
                     android:id="@+id/event_details_header">
-                    <ImageView
+                    <com.android.volley.toolbox.NetworkImageView
                         android:id="@+id/image_view_event_pictue"
                         android:layout_width="fill_parent"
                         android:layout_height="fill_parent"
@@ -50,7 +49,8 @@
                         android:id="@+id/text_view_event_name"
                         android:layout_marginLeft="@dimen/text_margin"
                         android:layout_marginTop="@dimen/text_margin"
-                        android:layout_marginBottom="@dimen/text_margin" />
+                        android:layout_marginBottom="@dimen/text_margin"
+                        android:fontFamily="sans-serif-smallcaps" />
 
                 </RelativeLayout>
 
@@ -113,37 +113,52 @@
 
                     <ImageButton
                         android:text="Button"
-                        android:layout_height="wrap_content"
+                        android:layout_height="50dp"
                         android:id="@+id/button_like"
                         android:layout_width="0dp"
-                        android:src="@drawable/nice"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/fa_heart_shape_silhouette"
                         android:backgroundTint="@color/button_bg"
                         android:layout_weight="1"/>
 
                     <ImageButton
                         android:text="Button"
                         android:layout_width="0dp"
-                        android:layout_height="wrap_content"
+                        android:layout_height="50dp"
+                        android:scaleType="fitCenter"
                         android:id="@+id/button_dislike"
-                        android:src="@drawable/sad"
+                        android:src="@drawable/fa_thumb_down"
                         android:backgroundTint="@color/button_bg"
                         android:layout_weight="1"/>
                     <ImageButton
                         android:text="Button"
                         android:layout_width="0dp"
-                        android:layout_height="wrap_content"
+                        android:layout_height="50dp"
+                        android:scaleType="fitCenter"
                         android:id="@+id/button_share"
                         android:src="@drawable/share"
                         android:backgroundTint="@color/button_bg"
-                        android:layout_weight="1"/>
+                        android:layout_weight="1"
+                        android:actionProviderClass="android.widget.ShareActionProvider"/>
                     <ImageButton
                         android:text="Button"
                         android:layout_width="0dp"
-                        android:layout_height="wrap_content"
+                        android:layout_height="50dp"
+                        android:scaleType="fitCenter"
                         android:id="@+id/button_participate"
                         android:src="@drawable/check"
                         android:backgroundTint="@color/button_bg"
                         android:layout_weight="1"/>
+                    <ImageButton
+                        android:text="Button"
+                        android:layout_width="0dp"
+                        android:scaleType="fitCenter"
+                        android:layout_height="50dp"
+                        android:id="@+id/button_tickets"
+                        android:src="@drawable/fa_ticket"
+                        android:backgroundTint="@color/button_bg"
+                        android:layout_weight="1"
+                        android:visibility="visible" />
                 </LinearLayout>
 
                 <TextView

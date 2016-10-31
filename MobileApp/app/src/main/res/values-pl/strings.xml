@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">EventNotifier</string>
+    <string name="action_settings">Ustawienia</string>
+    <string name="events">Wydarzenia</string>
+    <string name="hello_blank_fragment"></string>
+    <string name="new_event_in_warsaw">Nowe wydarzenie w pobliżu!</string>
+</resources>

@@ -15,13 +15,21 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
-@Table(name = "users")
+@Table(name = "users", uniqueConstraints = { @UniqueConstraint(columnNames = {"facebookId"})})
 public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
     @Column(name="id")
     Long id;
+
+    private String accessToken;
+
+    private String facebookId;
+
+    private Double lastLatitude;
+
+    private Double lastLongitude;
 
     @OneToMany(fetch = FetchType.LAZY)
     private List<Recommendation> recommendations;

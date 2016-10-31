@@ -35,6 +35,8 @@ public class Event {
     @Column(length = 10000)
     private String description;
 
+    private String ticketUri;
+
     @OneToMany(fetch = FetchType.LAZY)
     private List<Recommendation> recommendations;
 
@@ -54,6 +56,9 @@ public class Event {
         event.setName(fbEvent.getName());
         event.setDescription(fbEvent.getDescription());
         event.setDate(fbEvent.getStartTime());
+        if (fbEvent.getTicketUri() != null) {
+            event.setTicketUri(fbEvent.getTicketUri());
+        }
         if (fbEvent.getCover() != null) {
             event.setPictureURL(fbEvent.getCover().getSource());
         }

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 /**
@@ -35,16 +36,16 @@ public class RecommendationController {
     }
 
     @RequestMapping(value = "/facebook_user/{user_id}", method = RequestMethod.GET)
-    public List<Event> getFacebookUserRecommendations(@PathVariable(value="user_id") Long userId) {
+    public List<Event> getFacebookUserRecommendations(@PathVariable(value="user_id") String userId) {
         //// TODO: 10/30/16
-        return null;
+        return recommendationRepository.findAll().stream().filter(r -> r.getUser().getFacebookId() == userId).map(r -> r.getEvent()).collect(Collectors.toList());
     }
 
     @RequestMapping(value = "/user/{user_id}", method = RequestMethod.GET)
     public List<Event> getUserRecommendations(@PathVariable(value="user_id") Long userId) {
         //TODO: filter on SQL level for efficiency
-        return eventRepository.findAll();
-        //return recommendationRepository.findAll().stream().filter(r -> r.getUser().getId() == userId).collect(Collectors.toList());
+        return eventRepository.findAll().subList(10, 25);
+        //return recommendationRepository.findAll().stream().filter(r -> r.getUser().getId() == userId).map(r -> r.getEvent()).collect(Collectors.toList());
     }
 
     @RequestMapping(value = "/like/{recommendation_id}", method = RequestMethod.PUT)
@@ -66,5 +67,29 @@ public class RecommendationController {
         Recommendation persistedRecommendation = recommendationRepository.findOne(recommendationId);
         persistedRecommendation.setInterested(true);
         return persistedRecommendation;
+    }
+
+    @RequestMapping(value = "like_event/{event_id}/as_user/{user_id}", method = RequestMethod.PUT)
+    public Recommendation likeEvent(@PathVariable(value="event_id") Long eventId, @PathVariable(value = "user_id") Long userId) {
+        Long recommendationId = recommendationRepository.findAll().stream()
+                .filter(r -> r.getUser().getId() == userId && r.getEvent().getId() == eventId)
+                .findFirst().get().getId();
+        return likeRecommendation(recommendationId);
+    }
+
+    @RequestMapping(value = "dislike_event/{event_id}/as_user/{user_id}", method = RequestMethod.PUT)
+    public Recommendation dislikeEvent(@PathVariable(value="event_id") Long eventId, @PathVariable(value = "user_id") Long userId) {
+        Long recommendationId = recommendationRepository.findAll().stream()
+                .filter(r -> r.getUser().getId() == userId && r.getEvent().getId() == eventId)
+                .findFirst().get().getId();
+        return dislikeRecommendation(recommendationId);
+    }
+
+    @RequestMapping(value = "interested_in_event/{event_id}/as_user/{user_id}", method = RequestMethod.PUT)
+    public Recommendation interestedInEvent(@PathVariable(value="event_id") Long eventId, @PathVariable(value = "user_id") Long userId) {
+        Long recommendationId = recommendationRepository.findAll().stream()
+                .filter(r -> r.getUser().getId() == userId && r.getEvent().getId() == eventId)
+                .findFirst().get().getId();
+        return interestedInRecommendation(recommendationId);
     }
 }

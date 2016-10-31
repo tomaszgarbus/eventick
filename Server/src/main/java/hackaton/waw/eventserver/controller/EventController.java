@@ -56,6 +56,12 @@ public class EventController {
     	eventRepository.save(event);
     	return event;
     }
+
+    @RequestMapping(value = "/add_facebook", method = RequestMethod.POST)
+    public Event addFacebookEvent(@RequestBody org.springframework.social.facebook.api.Event fbEvent) {
+        Event event = Event.fromFacebookEvent(fbEvent);
+        return event;
+    }
     
     @RequestMapping(value = "/{event_id}", method = RequestMethod.GET)
     public Event getEventById(@PathVariable(value="event_id") Long id) {

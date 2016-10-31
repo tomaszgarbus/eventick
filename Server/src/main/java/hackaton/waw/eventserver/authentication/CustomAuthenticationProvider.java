@@ -5,7 +5,9 @@ import com.restfb.FacebookClient;
 import com.restfb.Version;
 import hackaton.waw.eventserver.FacebookEventCrawler;
 import hackaton.waw.eventserver.controller.EventController;
+import hackaton.waw.eventserver.controller.UserController;
 import hackaton.waw.eventserver.model.User;
+import hackaton.waw.eventserver.repo.UserRepository;
 import hackaton.waw.eventserver.service.EventService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -31,23 +33,41 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
     EventController eventController;
 
     @Autowired
+    UserController userController;
+
+    @Autowired
     EventService eventService;
 
-    private boolean verifyAccessToken(String userId, String accessToken) {
+    @Autowired
+    UserRepository userRepository;
+
+    private User verifyAccessToken(String userId, String accessToken) {
         Version apiVersion = Version.VERSION_2_8;
         FacebookClient facebookClient = new DefaultFacebookClient(accessToken, apiVersion);
         com.restfb.types.User object = (com.restfb.types.User) facebookClient.fetchObject("me", com.restfb.types.User.class);
         if (!object.getId().equals(userId)) {
-            return false;
+            return null;
         }
 
-        //Crawl events in the meantime
+        //Crawl events in the background thread
         try {
             eventService.crawlFacebookEvents(userId, accessToken);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return true;
+
+        //Find user in database or create a new user
+        User user = userController.findByFacebbookId(userId);
+        if (user == null) {
+            user = new User();
+            user.setFacebookId(userId);
+            user.setAccessToken(accessToken);
+            userRepository.save(user);
+        } else {
+            //TODO: ?
+        }
+
+        return user;
     }
 
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
@@ -55,13 +75,14 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         String userId = authentication.getName();
         String accessToken = (String) authentication.getCredentials();
 
-        if (!verifyAccessToken(userId, accessToken)) {
-            throw new BadCredentialsException("access token not working");
+        User user = verifyAccessToken(userId, accessToken);
+        if (user == null) {
+            throw new BadCredentialsException("Access token not working");
         }
 
         Collection<? extends GrantedAuthority> authorities = new ArrayList<>();
 
-        return new UsernamePasswordAuthenticationToken(new User(), accessToken, authorities);
+        return new UsernamePasswordAuthenticationToken(user, accessToken, authorities);
     }
 
     public boolean supports(Class<?> arg0) {

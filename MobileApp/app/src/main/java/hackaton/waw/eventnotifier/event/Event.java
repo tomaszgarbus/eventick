@@ -33,17 +33,30 @@ import static hackaton.waw.eventnotifier.event.EventManager.FacebookEventFetcher
 @DatabaseTable(tableName = "event")
 public class Event {
 
-    @DatabaseField(generatedId = true)
+    //@DatabaseField(generatedId = true)
+    @DatabaseField(id = true)
     private Long id;
 
     @DatabaseField(uniqueCombo = true)
     private String name;
 
+    @DatabaseField
+    private String ticketsUri;
+
     @DatabaseField(uniqueCombo = true)
     private String description;
 
-    @DatabaseField(foreign = true, foreignAutoCreate = true, foreignAutoRefresh = true)
+    @DatabaseField(foreign = true, foreignAutoRefresh = true)
     private Location location;
+
+    @DatabaseField
+    private Boolean liked;
+
+    @DatabaseField
+    private Boolean disliked;
+
+    @DatabaseField
+    private Boolean interested;
 
     private Bitmap picture;
 
@@ -51,8 +64,7 @@ public class Event {
     private String pictureURL;
     public void setPictureURL(String pictureURL) {
         this.pictureURL = pictureURL;
-        this.picture = bitmapFromCoverSource(pictureURL);
-
+        //this.picture = bitmapFromCoverSource(pictureURL);
     }
 
     @DatabaseField
@@ -87,8 +99,10 @@ public class Event {
     }
 
     public void parseJSON(JSONObject json) {
-        this.setLocation(new Location());
         try {
+            if (json.has("id")) {
+                this.setId(json.getLong("id"));
+            }
             if (json.has("name")) {
                 this.setName(json.getString("name"));
             }
@@ -98,31 +112,16 @@ public class Event {
             if (json.has("pictureURL")) {
                 String source = json.getString("pictureURL");
                 this.setPictureURL(source);
-                this.setPicture(bitmapFromCoverSource(source));
+                //this.setPicture(bitmapFromCoverSource(source));
+            }
+            if (json.has("ticketUri")) {
+                this.setTicketsUri(json.getString("ticketUri"));
             }
             if (json.has("date")) {
                 Date date = new Date(json.getLong("date"));
                 this.setDate(date);
-                // Server sends hopefully date as long
-                /*String str = json.getString("start_time");
-                System.out.println(str);
-                DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
-                try {
-                    Date date = df.parse(str);
-                    this.setDate(date);
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }*/
             }
-            if (json.has("location")) {
-                this.getLocation().setName(json.getJSONObject("location").getString("name"));
-                if (json.getJSONObject("location").has("lat") &&
-                        json.getJSONObject("location").has("lng")) {
-                    double latitude = json.getJSONObject("location").getDouble("lat");
-                    double longitude = json.getJSONObject("location").getDouble("lng");
-                    this.getLocation().setLatLng(new LatLng(latitude, longitude));
-                }
-            }
+            this.setLocation(Location.fromJSON(json.getJSONObject("location")));
         } catch (JSONException e) {
 
         }

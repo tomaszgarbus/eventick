@@ -38,15 +38,19 @@ public class FacebookEventCrawler implements Runnable {
         Facebook facebook = new FacebookTemplate(accessToken);
         ((FacebookTemplate)facebook).setApiVersion("2.8");
         List<Event> events =
-                facebook.eventOperations().search("*", new PagingParameters(10, 0, new Long(0), Long.MAX_VALUE));
+                facebook.eventOperations().search("*", new PagingParameters(100, 0, new Long(0), Long.MAX_VALUE));
         for (org.springframework.social.facebook.api.Event fbEvent : events) {
             hackaton.waw.eventserver.model.Event event = hackaton.waw.eventserver.model.Event.fromFacebookEvent(fbEvent);
 
             //get also cover to event
-            JSONObject coverJson = new JSONObject(facebook.fetchObject(fbEvent.getId(), String.class, "cover"));
-            if (coverJson.has("cover")) {
+            JSONObject extraFieldsJson = new JSONObject(facebook.fetchObject(fbEvent.getId(), String.class, "cover", "ticket_uri"));
+            if (extraFieldsJson.has("cover")) {
                 String pictureURL = new JSONObject(facebook.fetchObject(fbEvent.getId(), String.class, "cover")).getJSONObject("cover").getString("source");
                 event.setPictureURL(pictureURL);
+            }
+            if (extraFieldsJson.has("ticket_uri")) {
+                String ticketsUri = extraFieldsJson.getString("ticket_uri");
+                event.setTicketUri(ticketsUri);
             }
             if (event.getLocation() == null) {
                 continue;

@@ -14,6 +14,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layoutManager="LinearLayoutManager"
+    android:clipToPadding="false"
+    android:paddingTop="40dp"
     tools:listitem="@layout/fragment_event" />
 
 </android.support.v4.widget.SwipeRefreshLayout>

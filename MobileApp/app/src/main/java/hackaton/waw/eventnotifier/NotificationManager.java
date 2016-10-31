@@ -24,9 +24,9 @@ public class NotificationManager {
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
         NotificationCompat.Builder notifBuilder = new NotificationCompat.Builder(context)
                 .setColor(Color.CYAN)
-                .setContentTitle(context.getString(R.string.new_event_in_warsaw))
+                .setContentTitle(context.getString(R.string.new_event_nearby))
                 .setContentText(event.getName())
-                .setSmallIcon(R.drawable.placeholder)
+                .setSmallIcon(R.drawable.fa_cocktail_glass)
                 .setContentIntent(pendingIntent);
         if (event.getPicture() != null) notifBuilder.setLargeIcon(event.getPicture());
         android.app.NotificationManager manager = (android.app.NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);

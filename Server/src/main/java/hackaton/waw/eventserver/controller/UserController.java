@@ -5,10 +5,10 @@ import hackaton.waw.eventserver.model.User;
 import hackaton.waw.eventserver.repo.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by tomek on 10/26/16.
@@ -23,5 +23,26 @@ public class UserController {
     public User addUser(@RequestBody User user) {
         userRepository.save(user);
         return user;
+    }
+
+    @RequestMapping(value = "/facebook/{facebook_id}", method = RequestMethod.GET)
+    public User findByFacebbookId(@PathVariable(value = "facebook_id") String facebookId) {
+        List<User> matchingUsers = userRepository.findAll().stream().filter(u -> u.getFacebookId().equals(facebookId)).collect(Collectors.toList());
+        return matchingUsers.isEmpty() ? null : matchingUsers.get(0);
+    }
+
+    @RequestMapping(value = "/facebook_id_to_id/{facebook_id}", method = RequestMethod.GET)
+    public String getIdFromFacebookId(@PathVariable(value = "facebook_id") String facebookId) {
+        User user = findByFacebbookId(facebookId);
+        return user != null ? user.getId().toString() : null;
+    }
+
+    @RequestMapping(value = "/check_in/{user_id}/{lat}/{lng}", method = RequestMethod.POST)
+    public void checkIn(@PathVariable(value = "user_id") Long userId, @PathVariable(value = "lat") Double latitude, @PathVariable(value = "lng") Double longitude) {
+        User user = userRepository.findOne(userId);
+        if (user != null) {
+            user.setLastLatitude(latitude);
+            user.setLastLongitude(longitude);
+        }
     }
 }

@@ -4,11 +4,11 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_event_list"
-            android:icon="@drawable/nice"
+            android:icon="@drawable/fa_cocktail_glass"
             android:title="Events" />
         <item
             android:id="@+id/nav_user_info"
-            android:icon="@drawable/nice"
+            android:icon="@drawable/fa_credit_card"
             android:title="User info" />
     </group>
 
@@ -19,9 +19,9 @@
                 android:icon="@drawable/ic_menu_share"
                 android:title="Share" />
             <item
-                android:id="@+id/nav_send"
-                android:icon="@drawable/ic_menu_send"
-                android:title="Send" />
+                android:id="@+id/nav_rate_app"
+                android:icon="@drawable/fa_star"
+                android:title="@string/rate_app" />
         </menu>
     </item>
 

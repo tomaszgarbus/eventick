@@ -2,11 +2,15 @@ package hackaton.waw.eventnotifier;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpClientStack;
 import com.android.volley.toolbox.JsonArrayRequest;
@@ -43,6 +47,7 @@ import hackaton.waw.eventnotifier.db.DBHelper;
 import hackaton.waw.eventnotifier.event.Event;
 import hackaton.waw.eventnotifier.event.EventManager;
 import hackaton.waw.eventnotifier.event.EventQueryIntentService;
+import hackaton.waw.eventnotifier.user.User;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -53,12 +58,16 @@ import static hackaton.waw.eventnotifier.NotificationManager.notifyAboutEvent;
  * Created by tomek on 10/25/16.
  */
 
+@Getter
+@Setter
 public class ServerConnectionManager {
 
     private Context context;
+    private BitmapCache bitmapCache;
     private HttpClient httpClient;
     private EventManager eventManager;
     private HttpClientStack httpClientStack;
+    private User user;
 
     public ServerConnectionManager(Context context) {
         this.context = context;
@@ -66,6 +75,17 @@ public class ServerConnectionManager {
         httpClientStack = new HttpClientStack(httpClient);
         DBHelper dbHelper = OpenHelperManager.getHelper(context, DBHelper.class);
         eventManager = new EventManager(dbHelper);
+        user = new User();
+    }
+
+    public boolean isNetworkAvailable() {
+        ConnectivityManager cm =
+                (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        boolean isConnected = activeNetwork != null &&
+                activeNetwork.isConnected();
+        return isConnected;
     }
 
     private JSONObject getJSON(final URL url) {
@@ -128,6 +148,33 @@ public class ServerConnectionManager {
         return false;
     }
 
+    public void setCurrentUserId() {
+        RequestQueue queue = Volley.newRequestQueue(context, httpClientStack);
+        String userId = AccessToken.getCurrentAccessToken().getUserId();
+        String url = "http://" + context.getString(R.string.server_address) + "/users/facebook/" + userId;
+
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    Long id = new JSONObject(response).getLong("id");
+                    Toast.makeText(context, response, Toast.LENGTH_SHORT).show();
+                    user.setId(id);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+            }
+        });
+        queue.add(stringRequest);
+        queue.add(stringRequest);
+        //TODO: ^ fix this ugly workaround
+    }
+
     public void getRecommendedEvents() {
         RequestQueue queue = Volley.newRequestQueue(context, httpClientStack);
         String userId = AccessToken.getCurrentAccessToken().getUserId();
@@ -141,6 +188,8 @@ public class ServerConnectionManager {
                     for (int i = 0; i < jsonArray.length(); i++) {
                         JSONObject jsonObject = jsonArray.getJSONObject(i);
                         Event event = Event.fromJSON(jsonObject);
+                        event.setPicture(EventManager.FacebookEventFetcher.bitmapFromCoverSource(event.getPictureURL()));
+                        bitmapCache.putBitmap(event.getPictureURL(), event.getPicture());
                         if (eventManager.storeEvent(event)) {
                             notifyAboutEvent(context, event);
                         }
@@ -158,4 +207,54 @@ public class ServerConnectionManager {
         queue.add(stringRequest);
     }
 
+    public void basicHttpPut(String url) {
+        RequestQueue queue = Volley.newRequestQueue(context, httpClientStack);
+        StringRequest putRequest = new StringRequest(Request.Method.PUT, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+            }
+        });
+        queue.add(putRequest);
+    }
+
+    public void basicHttpPost(String url) {
+        RequestQueue queue = Volley.newRequestQueue(context, httpClientStack);
+        StringRequest putRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+            }
+        });
+        queue.add(putRequest);
+    }
+
+    public void likeEvent(Long eventId) {
+        String url = "http://" + context.getString(R.string.server_address) + "/recommendations/like_event/" + eventId + "/as_user/" + user.getId();
+        basicHttpPut(url);
+    }
+
+    public void dislikeEvent(Long eventId) {
+        String url = "http://" + context.getString(R.string.server_address) + "/recommendations/dislike_event/" + eventId + "/as_user/" + user.getId();
+        basicHttpPut(url);
+    }
+
+    public void interestedInEvent(Long eventId) {
+        String url = "http://" + context.getString(R.string.server_address) + "/recommendations/interested_in_event/" + eventId + "/as_user/" + user.getId();
+        basicHttpPut(url);
+    }
+
+    public void sendUserLocation() {
+        basicHttpPost("http://" + context.getString(R.string.server_address) + "/users/check_in/" + user.getId() + "/" + user.getLatitude() + "/" + user.getLongitude());
+    }
 }

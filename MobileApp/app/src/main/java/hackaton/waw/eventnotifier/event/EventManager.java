@@ -55,9 +55,10 @@ public class EventManager {
     Dao<Location, Long> locDao;
     DBHelper dbHelper;
 
-    public EventManager(DBHelper dbHelper){
+    public EventManager(Context context, DBHelper dbHelper){
         try {
             this.dbHelper = dbHelper;
+            this.context = context;
             eventDao = dbHelper.getEventDao();
             locDao = dbHelper.getLocationDao();
             initialize();

@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">EventNotifier</string>
-    <string name="server_address">192.168.1.118:8080</string>
-    <string name="facebook_app_id">1669615200018065</string>
+    <string name="server_address" translatable="false">192.168.0.31:8080</string>
+    <string name="facebook_app_id" translatable="false">1669615200018065</string>
 
     <string name="new_event_nearby">New event nearby!</string>
     <string name="today">Today</string>
@@ -16,6 +16,9 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="rate_app">Rate us!</string>
+    <string name="share">Share</string>
+    <string name="communicate">Communicate</string>
 
     <string name="action_settings">Settings</string>
+    <string name="new_event_in_warsaw">New event in Warsaw</string>
 </resources>

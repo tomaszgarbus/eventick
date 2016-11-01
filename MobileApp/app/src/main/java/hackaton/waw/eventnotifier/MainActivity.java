@@ -3,38 +3,30 @@ package hackaton.waw.eventnotifier;
 import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.AlarmManager;
-import android.app.IntentService;
 import android.app.PendingIntent;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -43,7 +35,6 @@ import com.facebook.AccessTokenTracker;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookSdk;
 import com.facebook.GraphRequest;
-import com.facebook.GraphRequestAsyncTask;
 import com.facebook.GraphResponse;
 import com.facebook.HttpMethod;
 import com.facebook.Profile;
@@ -56,13 +47,9 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
-import java.net.URL;
 import java.util.Arrays;
-import java.util.List;
 
 import hackaton.waw.eventnotifier.db.DBHelper;
 import hackaton.waw.eventnotifier.event.Event;
@@ -70,18 +57,16 @@ import hackaton.waw.eventnotifier.event.EventAlarmReceiver;
 import hackaton.waw.eventnotifier.event.EventDetailsFragment;
 import hackaton.waw.eventnotifier.event.EventListFragment;
 import hackaton.waw.eventnotifier.event.EventManager;
-import hackaton.waw.eventnotifier.event.EventQueryIntentService;
 import hackaton.waw.eventnotifier.event.EventRecyclerViewAdapter;
 import hackaton.waw.eventnotifier.user.User;
 import hackaton.waw.eventnotifier.user.UserInfoFragment;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.core.Main;
 
 @Getter
 @Setter
 public class MainActivity extends AppCompatActivity
-        implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, NavigationView.OnNavigationItemSelectedListener, EventListFragment.OnListFragmentInteractionListener {
+        implements NavigationView.OnNavigationItemSelectedListener, EventListFragment.OnListFragmentInteractionListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     private CallbackManager callbackManager;
     private EventManager eventManager;
@@ -89,6 +74,7 @@ public class MainActivity extends AppCompatActivity
     private DBHelper dbHelper;
     private RecyclerView mRecyclerView;
     private BitmapCache bitmapCache;
+    private Location lastLocation;
     private GoogleApiClient googleApiClient;
 
     protected void setStatusBarTranslucent(boolean makeTranslucent) {
@@ -110,8 +96,8 @@ public class MainActivity extends AppCompatActivity
         setUpAccessTokenTracker();
         LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("public_profile"));
 
-
-        eventManager = new EventManager(dbHelper);
+        eventManager = new EventManager(this, dbHelper);
+        serverConnectionManager = new ServerConnectionManager(getApplicationContext());
         bitmapCache = new BitmapCache();
 
         //Ask for permision to external storage
@@ -137,6 +123,7 @@ public class MainActivity extends AppCompatActivity
                 loadEventFromNotification();
             }
         } else {
+            //Things that need to be done only once
             setUpAlarmManager();
         }
 
@@ -192,6 +179,18 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    @Override
+    protected void onStart() {
+        googleApiClient.connect();
+        super.onStart();
+    }
+
+    @Override
+    protected void onStop() {
+        googleApiClient.disconnect();
+        super.onStop();
+    }
+
     private void loadEventFromNotification() {
         Long id = Long.parseLong(getIntent().getData().getQueryParameter("id"));
         Event event = eventManager.findEventById(id);
@@ -212,13 +211,18 @@ public class MainActivity extends AppCompatActivity
             protected void onCurrentAccessTokenChanged(AccessToken oldAccessToken, AccessToken currentAccessToken) {
                 if (currentAccessToken != null) {
                     setUpProfilePictureView();
-                    setUpCoverPhotho();
+                    setUpCoverPhoto();
 
-                    serverConnectionManager = new ServerConnectionManager(getApplicationContext());
                     serverConnectionManager.authenticate(currentAccessToken);
                     serverConnectionManager.setCurrentUserId();
                     serverConnectionManager.getRecommendedEvents();
                     serverConnectionManager.setBitmapCache(bitmapCache);
+
+                    if (serverConnectionManager != null && lastLocation != null) {
+                        serverConnectionManager.getUser().setLatitude(lastLocation.getLatitude());
+                        serverConnectionManager.getUser().setLongitude(lastLocation.getLongitude());
+                        serverConnectionManager.sendUserLocation();
+                    }
                 }
             }
         }.startTracking();
@@ -238,7 +242,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     @TargetApi(value = 16)
-    private void setUpCoverPhotho() {
+    private void setUpCoverPhoto() {
         final LinearLayout layout = (LinearLayout) findViewById(R.id.layout_nav_header);
         new GraphRequest(
                 AccessToken.getCurrentAccessToken(),
@@ -376,19 +380,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    protected void onStart() {
-        googleApiClient.connect();
-        super.onStart();
-    }
-
-    @Override
-    protected void onStop() {
-        googleApiClient.disconnect();
-        super.onStop();
-    }
-
-    @Override
-    public void onConnected(Bundle bundle) {
+    public void onConnected(@Nullable Bundle bundle) {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
@@ -402,9 +394,12 @@ public class MainActivity extends AppCompatActivity
         Location lastLocation = LocationServices.FusedLocationApi.getLastLocation(
                 googleApiClient);
         if (lastLocation != null) {
-            serverConnectionManager.getUser().setLatitude(lastLocation.getLatitude());
-            serverConnectionManager.getUser().setLongitude(lastLocation.getLongitude());
-            serverConnectionManager.sendUserLocation();
+            if (serverConnectionManager.getUser() != null) {
+                User user = serverConnectionManager.getUser();
+                user.setLongitude(lastLocation.getLongitude());
+                user.setLatitude(lastLocation.getLatitude());
+                serverConnectionManager.sendUserLocation();
+            }
         }
     }
 
@@ -414,7 +409,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onConnectionFailed(ConnectionResult connectionResult) {
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
     }
 }

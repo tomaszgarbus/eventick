@@ -70,7 +70,7 @@ public class Event {
     @DatabaseField
     private Date date;
 
-    private static String formatToTodayOrTomorrow(Date date) {
+    private static String formatToTodayOrTomorrow(Date date, String todayStr, String tomorrowStr) {
         String str = new SimpleDateFormat("EEE HH:mm").format(date);
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
@@ -80,16 +80,16 @@ public class Event {
         DateFormat timeFormatter = new SimpleDateFormat("HH:mm");
 
         if (calendar.get(Calendar.YEAR) == today.get(Calendar.YEAR) && calendar.get(Calendar.DAY_OF_YEAR) == today.get(Calendar.DAY_OF_YEAR)) {
-            return "Today " + timeFormatter.format(date);
+            return todayStr + " " + timeFormatter.format(date);
         } else if (calendar.get(Calendar.YEAR) == tomorrow.get(Calendar.YEAR) && calendar.get(Calendar.DAY_OF_YEAR) == tomorrow.get(Calendar.DAY_OF_YEAR)) {
-            return "Tomorrow " + timeFormatter.format(date);
+            return tomorrowStr + " " + timeFormatter.format(date);
         } else {
             return str;
         }
     }
 
-    public String getDisplayableDate() {
-        return formatToTodayOrTomorrow(date);
+    public String getDisplayableDate(String todayStr, String tomorrowStr) {
+        return formatToTodayOrTomorrow(date, todayStr, tomorrowStr);
     }
 
     public static Event fromJSON(JSONObject json) {

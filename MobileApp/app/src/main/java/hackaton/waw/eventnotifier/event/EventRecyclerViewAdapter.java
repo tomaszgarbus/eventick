@@ -49,7 +49,9 @@ public class EventRecyclerViewAdapter extends RecyclerView.Adapter<EventRecycler
             holder.contentView.setText(events.get(position).getLocation().getName());
         }
         if (events.get(position).getDate() != null) {
-            holder.dateView.setText(events.get(position).getDisplayableDate());
+            String todayStr = eventManager.getContext().getString(R.string.today);
+            String tomorrowStr = eventManager.getContext().getString(R.string.tomorrow);
+            holder.dateView.setText(events.get(position).getDisplayableDate(todayStr, tomorrowStr));
         }
         if (events.get(position).getPictureURL() != null) {
             holder.imageView.setImageUrl(holder.item.getPictureURL(), holder.imageLoader);
@@ -107,6 +109,10 @@ public class EventRecyclerViewAdapter extends RecyclerView.Adapter<EventRecycler
         }
 
         public void setImageViewLayoutParams() {
+            if (bitmapCache.getBitmap(item.getPictureURL()) == null) {
+                return;
+            }
+
             ViewGroup.LayoutParams params = relativeLayout.getLayoutParams();
 
             float density = view.getContext().getResources().getDisplayMetrics().density;

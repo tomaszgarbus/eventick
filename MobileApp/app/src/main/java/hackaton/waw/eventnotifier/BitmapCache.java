@@ -106,6 +106,9 @@ public class BitmapCache extends LruCache<String, Bitmap> implements ImageLoader
 
     @Override
     protected Bitmap create(String key) {
+        if (key.indexOf("http") < 0) {
+            return null;
+        }
         String url = key.substring(key.indexOf("http"));
 
         if (DiskBitmapCache.fileExists(url)) {
@@ -146,6 +149,9 @@ public class BitmapCache extends LruCache<String, Bitmap> implements ImageLoader
 
     @Override
     public void putBitmap(String url, Bitmap bitmap) {
+        if (url == null || bitmap == null) {
+            return;
+        }
         if (bitmap != null && !DiskBitmapCache.fileExists(url)) {
             DiskBitmapCache.saveToDisk(url, bitmap);
         }

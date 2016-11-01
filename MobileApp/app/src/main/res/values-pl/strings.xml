@@ -3,6 +3,16 @@
     <string name="app_name">EventNotifier</string>
     <string name="action_settings">Ustawienia</string>
     <string name="events">Wydarzenia</string>
-    <string name="hello_blank_fragment"></string>
+    <string name="hello_blank_fragment">Lokalizacja</string>
     <string name="new_event_in_warsaw">Nowe wydarzenie w pobliżu!</string>
+    <string name="user_info">Panel użytkownika</string>
+    <string name="tomorrow">Jutro</string>
+    <string name="today">Dziś</string>
+    <string name="title_activity_main">Wydarzenia</string>
+    <string name="share">Udostępnij</string>
+    <string name="rate_app">Oceń nas!</string>
+    <string name="new_event_nearby">Nowe wydarzenie w pobliżu!</string>
+    <string name="navigation_drawer_open">Otwórz panel nawigacji</string>
+    <string name="navigation_drawer_close">Zamknij panel nawigacji</string>
+    <string name="communicate">Wsparcie</string>
 </resources>

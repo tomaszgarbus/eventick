@@ -40,21 +40,24 @@ public class EventQueryIntentService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        FacebookSdk.sdkInitialize(this);
-        DBHelper dbHelper = OpenHelperManager.getHelper(this, DBHelper.class);
-        bitmapCache = new BitmapCache();
-        eventManager = new EventManager(dbHelper);
-        serverConnectionManager = new ServerConnectionManager(this);
-        serverConnectionManager.authenticate(AccessToken.getCurrentAccessToken());
-        serverConnectionManager.setCurrentUserId();
-        serverConnectionManager.setBitmapCache(bitmapCache);
+        try {
+            FacebookSdk.sdkInitialize(this);
+            DBHelper dbHelper = OpenHelperManager.getHelper(this, DBHelper.class);
+            bitmapCache = new BitmapCache();
+            eventManager = new EventManager(this, dbHelper);
+            serverConnectionManager = new ServerConnectionManager(this);
+            serverConnectionManager.authenticate(AccessToken.getCurrentAccessToken());
+            serverConnectionManager.setCurrentUserId();
+            serverConnectionManager.setBitmapCache(bitmapCache);
 
-        if (intent != null) {
-            if (AccessToken.getCurrentAccessToken() == null) {
-                return;
+            if (intent != null) {
+                if (AccessToken.getCurrentAccessToken() == null) {
+                    return;
+                }
+                serverConnectionManager.getRecommendedEvents();
             }
-            serverConnectionManager.getRecommendedEvents();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
     }
 }

@@ -74,7 +74,7 @@ public class ServerConnectionManager {
         httpClient = new DefaultHttpClient();
         httpClientStack = new HttpClientStack(httpClient);
         DBHelper dbHelper = OpenHelperManager.getHelper(context, DBHelper.class);
-        eventManager = new EventManager(dbHelper);
+        eventManager = new EventManager(context, dbHelper);
         user = new User();
     }
 

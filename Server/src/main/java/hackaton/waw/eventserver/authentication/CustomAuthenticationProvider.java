@@ -41,9 +41,26 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
     @Autowired
     UserRepository userRepository;
 
+    private User verifyWithDatabase(String userId, String accessToken) {
+        User user = userController.findByFacebookId(userId);
+        if (user != null && user.getAccessToken().equals(accessToken)) {
+            return user;
+        }
+        return null;
+    }
+
     private User verifyAccessToken(String userId, String accessToken) {
+        if (userId == null || accessToken == null) {
+            return null;
+        }
+
+        if (null != verifyWithDatabase(userId, accessToken)) {
+            return verifyWithDatabase(userId, accessToken);
+        }
+
         Version apiVersion = Version.VERSION_2_8;
         FacebookClient facebookClient = new DefaultFacebookClient(accessToken, apiVersion);
+
         com.restfb.types.User object = (com.restfb.types.User) facebookClient.fetchObject("me", com.restfb.types.User.class);
         if (!object.getId().equals(userId)) {
             return null;
@@ -57,14 +74,15 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         }
 
         //Find user in database or create a new user
-        User user = userController.findByFacebbookId(userId);
+        User user = userController.findByFacebookId(userId);
         if (user == null) {
             user = new User();
             user.setFacebookId(userId);
             user.setAccessToken(accessToken);
             userRepository.save(user);
         } else {
-            //TODO: ?
+            //Update access token below:
+            user.setAccessToken(accessToken);
         }
 
         return user;

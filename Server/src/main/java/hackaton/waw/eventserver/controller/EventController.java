@@ -36,6 +36,7 @@ public class EventController {
 	
 	@Autowired EventRepository eventRepository;
     @Autowired LocationRepository locationRepository;
+    @Autowired UserController userController;
 	
     @RequestMapping(value = "/sample", method = RequestMethod.GET)
     public Event getSampleEvent() {
@@ -62,7 +63,15 @@ public class EventController {
         Event event = Event.fromFacebookEvent(fbEvent);
         return event;
     }
-    
+
+    @RequestMapping(value = "/add_facebook/{facebook_id}", method = RequestMethod.POST)
+    public Event addFacebookEvent(@PathVariable(value = "facebook_id") String id) {
+        Facebook facebook = new FacebookTemplate(userController.getRandomAccessToken());
+        ((FacebookTemplate)facebook).setApiVersion("2.8");
+        org.springframework.social.facebook.api.Event fbEvent = facebook.eventOperations().getEvent(id);
+        return addFacebookEvent(fbEvent);
+    }
+
     @RequestMapping(value = "/{event_id}", method = RequestMethod.GET)
     public Event getEventById(@PathVariable(value="event_id") Long id) {
     	return eventRepository.findOne(id);

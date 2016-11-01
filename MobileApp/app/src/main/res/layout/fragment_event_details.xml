@@ -68,7 +68,8 @@
                         android:textSize="25dp"
                         android:src="@drawable/clock"
                         android:width="10dp"
-                        android:layout_marginRight="5dp"/>
+                        android:layout_marginRight="5dp"
+                        android:layout_margin="5dp" />
 
                     <TextView
                         android:layout_height="match_parent"
@@ -77,7 +78,8 @@
                         android:layout_width="0dp"
                         android:text="22:00 Wed"
                         android:id="@+id/text_view_event_time"
-                        android:layout_weight="1" />
+                        android:layout_weight="1"
+                        android:padding="10dp" />
 
                 </LinearLayout>
 
@@ -93,7 +95,8 @@
                         android:textColor="#000"
                         android:src="@drawable/place_pin"
                         android:width="10dp"
-                        android:layout_marginRight="5dp"/>
+                        android:layout_marginRight="5dp"
+                        android:layout_margin="5dp" />
 
                     <TextView
                         android:layout_height="match_parent"
@@ -102,7 +105,8 @@
                         android:layout_width="0dp"
                         android:text="@string/hello_blank_fragment"
                         android:id="@+id/text_view_event_location"
-                        android:layout_weight="1" />
+                        android:layout_weight="1"
+                        android:padding="10dp" />
 
                 </LinearLayout>
 
@@ -117,7 +121,7 @@
                         android:id="@+id/button_like"
                         android:layout_width="0dp"
                         android:scaleType="fitCenter"
-                        android:src="@drawable/fa_heart_shape_silhouette"
+                        android:src="@drawable/fa_heart_shape_outline"
                         android:backgroundTint="@color/button_bg"
                         android:layout_weight="1"/>
 

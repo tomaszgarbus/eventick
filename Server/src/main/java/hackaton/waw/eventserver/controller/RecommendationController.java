@@ -92,4 +92,5 @@ public class RecommendationController {
                 .findFirst().get().getId();
         return interestedInRecommendation(recommendationId);
     }
+
 }

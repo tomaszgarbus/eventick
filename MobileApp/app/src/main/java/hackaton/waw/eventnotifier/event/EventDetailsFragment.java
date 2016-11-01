@@ -61,7 +61,8 @@ public class EventDetailsFragment extends Fragment implements OnMapReadyCallback
 
     public static EventDetailsFragment newInstance(Event event) {
         if (event == null) {
-            throw new RuntimeException("Null event passed");
+            //throw new RuntimeException("Null event passed");
+            //TODO: consider line above
         }
 
         EventDetailsFragment fragment = new EventDetailsFragment();
@@ -130,8 +131,15 @@ public class EventDetailsFragment extends Fragment implements OnMapReadyCallback
         likeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                event.setLiked(true);
-                serverConnectionManager.likeEvent(event.getId());
+                if (false == event.getLiked()) {
+                    event.setLiked(true);
+                    serverConnectionManager.likeEvent(event.getId());
+                    likeButton.setImageResource(R.drawable.fa_heart_shape_silhouette);
+                }
+                if (true == event.getLiked()) {
+                    event.setLiked(false);
+                    likeButton.setImageResource(R.drawable.fa_heart_shape_outline);
+                }
             }
         });
 
@@ -158,7 +166,9 @@ public class EventDetailsFragment extends Fragment implements OnMapReadyCallback
             eventDescriptionTextView.setText(event.getDescription());
         }
         if (event.getDate() != null) {
-            eventTimeTextView.setText(event.getDisplayableDate());
+            String todayStr = getActivity().getString(R.string.today);
+            String tomorrowStr = getActivity().getString(R.string.tomorrow);
+            eventTimeTextView.setText(event.getDisplayableDate(todayStr, tomorrowStr));
         }
         if (event.getLocation() != null) {
             eventLocationTextView.setText(event.getLocation().getName());

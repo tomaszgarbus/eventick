@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 /**
@@ -26,14 +27,14 @@ public class UserController {
     }
 
     @RequestMapping(value = "/facebook/{facebook_id}", method = RequestMethod.GET)
-    public User findByFacebbookId(@PathVariable(value = "facebook_id") String facebookId) {
+    public User findByFacebookId(@PathVariable(value = "facebook_id") String facebookId) {
         List<User> matchingUsers = userRepository.findAll().stream().filter(u -> u.getFacebookId().equals(facebookId)).collect(Collectors.toList());
         return matchingUsers.isEmpty() ? null : matchingUsers.get(0);
     }
 
     @RequestMapping(value = "/facebook_id_to_id/{facebook_id}", method = RequestMethod.GET)
     public String getIdFromFacebookId(@PathVariable(value = "facebook_id") String facebookId) {
-        User user = findByFacebbookId(facebookId);
+        User user = findByFacebookId(facebookId);
         return user != null ? user.getId().toString() : null;
     }
 
@@ -44,5 +45,13 @@ public class UserController {
             user.setLastLatitude(latitude);
             user.setLastLongitude(longitude);
         }
+        userRepository.save(user);
+    }
+
+    @RequestMapping(value = "/random_access_token", method = RequestMethod.GET)
+    public String getRandomAccessToken() {
+        List<User> allUsers = userRepository.findAll();
+        User randomUser = allUsers.get(new Random().nextInt(allUsers.size()));
+        return randomUser.getAccessToken();
     }
 }

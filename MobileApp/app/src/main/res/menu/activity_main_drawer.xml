@@ -5,19 +5,19 @@
         <item
             android:id="@+id/nav_event_list"
             android:icon="@drawable/fa_cocktail_glass"
-            android:title="Events" />
+            android:title="@string/events" />
         <item
             android:id="@+id/nav_user_info"
             android:icon="@drawable/fa_credit_card"
-            android:title="User info" />
+            android:title="@string/user_info" />
     </group>
 
-    <item android:title="Communicate">
+    <item android:title="@string/communicate">
         <menu>
             <item
                 android:id="@+id/nav_share"
                 android:icon="@drawable/ic_menu_share"
-                android:title="Share" />
+                android:title="@string/share" />
             <item
                 android:id="@+id/nav_rate_app"
                 android:icon="@drawable/fa_star"

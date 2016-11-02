@@ -5,10 +5,12 @@ import com.restfb.FacebookClient;
 import com.restfb.Parameter;
 import com.restfb.Version;
 import com.restfb.json.JsonObject;
+import hackaton.waw.eventserver.FacebookEventCrawler;
 import hackaton.waw.eventserver.model.Event;
 import hackaton.waw.eventserver.repo.EventRepository;
 
 import hackaton.waw.eventserver.repo.LocationRepository;
+import hackaton.waw.eventserver.service.EventService;
 import org.json.JSONObject;
 import org.springframework.social.facebook.api.Facebook;
 import org.springframework.social.facebook.api.PagingParameters;
@@ -37,7 +39,9 @@ public class EventController {
 	@Autowired EventRepository eventRepository;
     @Autowired LocationRepository locationRepository;
     @Autowired UserController userController;
-	
+    @Autowired FacebookEventCrawler facebookEventCrawler;
+	@Autowired EventService eventService;
+
     @RequestMapping(value = "/sample", method = RequestMethod.GET)
     public Event getSampleEvent() {
         Event event = new Event();
@@ -80,6 +84,17 @@ public class EventController {
     @RequestMapping(value = "/recommended", method = RequestMethod.GET)
     public List<Event> getRecommendedEvents() {
         return eventRepository.findAll();
+    }
+
+    @RequestMapping(value = "/request_facebook_place_crawl/{place_facebook_id}/{user_facebook_id}", method = RequestMethod.PUT)
+    public void requestPlaceCrawler(@PathVariable(value = "place_facebook_id") String placeFbId, @PathVariable(value = "user_facebook_id") String userFbId) {
+        //Crawl events in the background thread
+        try {
+            String accessToken = userController.findByFacebookId(userFbId).getAccessToken();
+            eventService.crawlFacebookPlaceEvents(userFbId, accessToken, placeFbId);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }

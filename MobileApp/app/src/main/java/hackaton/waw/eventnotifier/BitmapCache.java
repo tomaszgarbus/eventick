@@ -6,7 +6,6 @@ import android.os.Environment;
 import android.util.LruCache;
 
 import com.android.volley.toolbox.ImageLoader;
-import com.jakewharton.disklrucache.DiskLruCache;
 
 import java.io.File;
 import java.io.FileInputStream;

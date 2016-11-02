@@ -149,6 +149,9 @@ public class ServerConnectionManager {
     }
 
     public void setCurrentUserId() {
+        if (AccessToken.getCurrentAccessToken() == null) {
+            return;
+        }
         RequestQueue queue = Volley.newRequestQueue(context, httpClientStack);
         String userId = AccessToken.getCurrentAccessToken().getUserId();
         String url = "http://" + context.getString(R.string.server_address) + "/users/facebook/" + userId;

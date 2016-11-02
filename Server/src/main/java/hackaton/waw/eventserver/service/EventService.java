@@ -30,4 +30,13 @@ public class EventService {
         crawler.setAccessToken(accessToken);
         new Thread(crawler).start();
     }
+
+    @Transactional(propagation = Propagation.REQUIRED)
+    public void crawlFacebookPlaceEvents(String userId, String accessToken, String placeId) {
+        crawler.setUserId(userId);
+        crawler.setAccessToken(accessToken);
+        crawler.setPlaceId(placeId);
+        crawler.setAction(FacebookEventCrawler.Action.CRAWL_PLACE);
+        new Thread(crawler).start();
+    }
 }

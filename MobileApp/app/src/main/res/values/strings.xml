@@ -1,6 +1,7 @@
 <resources>
-    <string name="app_name">EventNotifier</string>
-    <string name="server_address" translatable="false">192.168.0.31:8080</string>
+    <string name="app_name">Eventick</string>
+    <!--<string name="server_address" translatable="false">10.20.7.200:8080</string>-->
+    <string name="server_address" translatable="false">51.254.205.235:8080</string>
     <string name="facebook_app_id" translatable="false">1669615200018065</string>
 
     <string name="new_event_nearby">New event nearby!</string>

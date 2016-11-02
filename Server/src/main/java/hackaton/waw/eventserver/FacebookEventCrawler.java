@@ -34,8 +34,15 @@ public class FacebookEventCrawler implements Runnable {
     @Autowired EventRepository eventRepository;
     @Autowired LocationController locationController;
 
+    public enum Action {
+        CRAWL_USER,
+        CRAWL_PLACE;
+    };
+
     private String userId;
     private String accessToken;
+    private String placeId;
+    private Action action = Action.CRAWL_USER;
 
     @Transactional
     public void crawlUserRecommendedEvents(String userId, String accessToken) {
@@ -78,7 +85,7 @@ public class FacebookEventCrawler implements Runnable {
         ((FacebookTemplate)facebook).setApiVersion("2.8");
         JSONArray jsonArray = new JSONObject(facebook.fetchObject(placeId + "/events?limit=1000", String.class)).getJSONArray("data");
         for (int i = 0; i < jsonArray.length(); i++) {
-            Event fbEvent = facebook.eventOperations().getEvent(jsonArray.getJSONObject(i).getString("id"));
+            Event fbEvent = facebook.fetchObject(jsonArray.getJSONObject(i).getString("id"), Event.class);
 
             hackaton.waw.eventserver.model.Event event = hackaton.waw.eventserver.model.Event.fromFacebookEvent(fbEvent);
 
@@ -110,6 +117,13 @@ public class FacebookEventCrawler implements Runnable {
 
     @Override
     public void run() {
-        crawlUserRecommendedEvents(userId, accessToken);
+        switch (action) {
+            case CRAWL_PLACE:
+                crawlPlaceEvents(placeId);
+                break;
+            case CRAWL_USER:
+                crawlUserRecommendedEvents(userId, accessToken);
+                break;
+        }
     }
 }

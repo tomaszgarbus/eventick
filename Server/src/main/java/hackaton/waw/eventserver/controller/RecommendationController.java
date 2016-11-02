@@ -44,7 +44,7 @@ public class RecommendationController {
     @RequestMapping(value = "/user/{user_id}", method = RequestMethod.GET)
     public List<Event> getUserRecommendations(@PathVariable(value="user_id") Long userId) {
         //TODO: filter on SQL level for efficiency
-        return eventRepository.findAll().subList(10, 25);
+        return eventRepository.findAll().subList(1, 10);
         //return recommendationRepository.findAll().stream().filter(r -> r.getUser().getId() == userId).map(r -> r.getEvent()).collect(Collectors.toList());
     }
 

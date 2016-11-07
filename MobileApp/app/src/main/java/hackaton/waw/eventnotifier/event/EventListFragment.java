@@ -87,7 +87,8 @@ public class EventListFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            recyclerView.setAdapter(new EventRecyclerViewAdapter(((MainActivity)getActivity()).getEventManager(), mListener));
+            recyclerView.setAdapter(new EventRecyclerViewAdapter(((MainActivity)getActivity()).getEventManager(),
+                    ((MainActivity)getActivity()).getServerConnectionManager(), mListener));
         }
         return view;
     }

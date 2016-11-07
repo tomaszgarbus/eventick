@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.persistence.*;
 
+import com.google.maps.model.LatLng;
 import hackaton.waw.eventserver.repo.LocationRepository;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

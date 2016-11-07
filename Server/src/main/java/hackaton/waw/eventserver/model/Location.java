@@ -4,6 +4,7 @@ import java.util.Date;
 
 import javax.persistence.*;
 
+import com.google.maps.model.LatLng;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -37,6 +38,13 @@ public class Location {
         name = "";
     }
 
+    public LatLng getLatLng() {
+        if (lat == null || lng == null) {
+            return null;
+        }
+        return new LatLng(lat, lng);
+    }
+
     public static Location fromFacebookPlace(Place place) {
         if (place == null) {
             return null;
@@ -52,11 +60,15 @@ public class Location {
     }
 
     public Double distance(Location destination) {
+        return distance(new LatLng(destination.getLat(), destination.getLng()));
+    }
+
+    public Double distance(LatLng destination) {
         //http://stackoverflow.com/questions/3694380/calculating-distance-between-two-points-using-latitude-longitude-what-am-i-doi
         double lat1 = lat;
-        double lat2 = destination.getLat();
+        double lat2 = destination.lat;
         double lon1 = lng;
-        double lon2 = destination.getLng();
+        double lon2 = destination.lng;
 
         final int R = 6371; // Radius of the earth
 

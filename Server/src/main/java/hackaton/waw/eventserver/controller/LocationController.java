@@ -2,6 +2,7 @@ package hackaton.waw.eventserver.controller;
 
 import com.google.maps.GeoApiContext;
 import com.google.maps.GeocodingApi;
+import hackaton.waw.eventserver.service.GoogleMapsApiService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,10 +28,12 @@ import java.util.stream.Collectors;
 @Component
 @RequestMapping("locations")
 public class LocationController {
-    private static final String GOOGLE_MAPS_API_KEY = "AIzaSyD6dslQugNBaveQumVTq6LqmZOUWZpT26Y";
 	
 	@Autowired
     LocationRepository locationRepository;
+
+    @Autowired
+    GoogleMapsApiService googleMapsApiService;
 	
     @RequestMapping(value = "sample", method = RequestMethod.GET)
     public Location getSampleLocation() {
@@ -59,7 +62,8 @@ public class LocationController {
         return allLocations.get(0);
     }
 
-    public void getLatLngFromMaps(Location location) {
-        //TODO: Geocoding
+    @RequestMapping(value = "/update_lat_lng", method = RequestMethod.PUT)
+    public void updateLocationsLatLng() {
+        googleMapsApiService.updateLocationsLatLng();
     }
 }

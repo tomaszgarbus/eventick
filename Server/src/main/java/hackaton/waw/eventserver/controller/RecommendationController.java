@@ -1,14 +1,20 @@
 package hackaton.waw.eventserver.controller;
 
+import com.google.maps.model.LatLng;
 import hackaton.waw.eventserver.model.Event;
 import hackaton.waw.eventserver.model.Recommendation;
+import hackaton.waw.eventserver.model.User;
 import hackaton.waw.eventserver.repo.EventRepository;
 import hackaton.waw.eventserver.repo.RecommendationRepository;
+import hackaton.waw.eventserver.repo.UserRepository;
+import org.apache.commons.lang.time.DateUtils;
 import org.apache.lucene.search.Collector;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
@@ -23,6 +29,7 @@ public class RecommendationController {
 
     @Autowired RecommendationRepository recommendationRepository;
     @Autowired EventRepository eventRepository;
+    @Autowired UserRepository userRepository;
 
     @RequestMapping(value = "/all", method = RequestMethod.GET)
     public List<Recommendation> getAllRecommendations() {
@@ -44,8 +51,8 @@ public class RecommendationController {
     @RequestMapping(value = "/user/{user_id}", method = RequestMethod.GET)
     public List<Event> getUserRecommendations(@PathVariable(value="user_id") Long userId) {
         //TODO: filter on SQL level for efficiency
-        return eventRepository.findAll().subList(1, 10);
-        //return recommendationRepository.findAll().stream().filter(r -> r.getUser().getId() == userId).map(r -> r.getEvent()).collect(Collectors.toList());
+        //return eventRepository.findAll().subList(1, 10);
+        return recommendationRepository.findAll().stream().filter(r -> r.getUser().getId() == userId).map(r -> r.getEvent()).collect(Collectors.toList());
     }
 
     @RequestMapping(value = "/like/{recommendation_id}", method = RequestMethod.PUT)
@@ -91,6 +98,44 @@ public class RecommendationController {
                 .filter(r -> r.getUser().getId() == userId && r.getEvent().getId() == eventId)
                 .findFirst().get().getId();
         return interestedInRecommendation(recommendationId);
+    }
+
+    @RequestMapping(value = "generate/{user_id}", method = RequestMethod.PUT)
+    public void generateRecommendationsForUser(@PathVariable(value = "user_id") Long userId) {
+        User user = userRepository.findOne(userId);
+        List<Event> events = eventRepository.findAll();
+        for (Event event : events) {
+
+            //ignore if event already happened
+            if (event.getDate().before(new Date())) {
+                continue;
+            }
+
+            //ignore if event is more than week from now
+            if (event.getDate().after(DateUtils.addDays(new Date(), 7))) {
+                continue;
+            }
+
+            LatLng userLatLng = user.getLastLatLng();
+            LatLng eventLatLng = event.getLocation().getLatLng();
+            if (userLatLng != null && eventLatLng != null) {
+                Double distance = event.getLocation().distance(userLatLng);
+                if (distance < 20000.) {
+                    Recommendation recommendation = new Recommendation();
+                    recommendation.setEvent(event);
+                    recommendation.setUser(user);
+                    recommendationRepository.save(recommendation);
+                }
+            }
+        }
+    }
+
+    @RequestMapping(value = "generate", method = RequestMethod.PUT)
+    public void generateRecommendations() {
+        List<User> users = userRepository.findAll();
+        for (User user : users) {
+            generateRecommendationsForUser(user.getId());
+        }
     }
 
 }

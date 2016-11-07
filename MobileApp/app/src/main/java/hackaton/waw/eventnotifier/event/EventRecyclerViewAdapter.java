@@ -15,6 +15,7 @@ import com.android.volley.toolbox.Volley;
 
 import hackaton.waw.eventnotifier.BitmapCache;
 import hackaton.waw.eventnotifier.MainActivity;
+import hackaton.waw.eventnotifier.ServerConnectionManager;
 import hackaton.waw.eventnotifier.event.EventListFragment.OnListFragmentInteractionListener;
 import hackaton.waw.eventnotifier.R;
 
@@ -25,9 +26,11 @@ public class EventRecyclerViewAdapter extends RecyclerView.Adapter<EventRecycler
     private EventManager eventManager;
     private final List<Event> events;
     private final OnListFragmentInteractionListener mListener;
+    private final ServerConnectionManager serverConnectionManager;
 
-    public EventRecyclerViewAdapter(EventManager eventManager, OnListFragmentInteractionListener listener) {
+    public EventRecyclerViewAdapter(EventManager eventManager, ServerConnectionManager serverConnectionManager, OnListFragmentInteractionListener listener) {
         this.eventManager = eventManager;
+        this.serverConnectionManager = serverConnectionManager;
         this.events = eventManager.getEvents();
         this.mListener = listener;
     }
@@ -80,6 +83,7 @@ public class EventRecyclerViewAdapter extends RecyclerView.Adapter<EventRecycler
         events.remove(position);
         eventManager.deleteEvent(id);
         notifyItemRemoved(position);
+        serverConnectionManager.dislikeEvent(id);
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

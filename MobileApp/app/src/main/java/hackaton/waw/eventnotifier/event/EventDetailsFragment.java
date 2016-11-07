@@ -131,12 +131,12 @@ public class EventDetailsFragment extends Fragment implements OnMapReadyCallback
         likeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (false == event.getLiked()) {
+                if (null == event.getLiked() || false == event.getLiked()) {
                     event.setLiked(true);
                     serverConnectionManager.likeEvent(event.getId());
                     likeButton.setImageResource(R.drawable.fa_heart_shape_silhouette);
                 }
-                if (true == event.getLiked()) {
+                else /*if (true == event.getLiked())*/ {
                     event.setLiked(false);
                     likeButton.setImageResource(R.drawable.fa_heart_shape_outline);
                 }

@@ -4,6 +4,7 @@ import hackaton.waw.eventserver.controller.LocationController;
 import hackaton.waw.eventserver.model.Location;
 import hackaton.waw.eventserver.repo.EventRepository;
 import hackaton.waw.eventserver.repo.LocationRepository;
+import hackaton.waw.eventserver.service.GoogleMapsApiService;
 import lombok.Getter;
 import lombok.Setter;
 import org.json.JSONArray;
@@ -33,6 +34,7 @@ public class FacebookEventCrawler implements Runnable {
     @Autowired LocationRepository locationRepository;
     @Autowired EventRepository eventRepository;
     @Autowired LocationController locationController;
+    @Autowired GoogleMapsApiService googleMapsApiService;
 
     public enum Action {
         CRAWL_USER,

@@ -1,5 +1,6 @@
 package hackaton.waw.eventserver.model;
 
+import com.google.maps.model.LatLng;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
@@ -30,6 +31,10 @@ public class User implements UserDetails {
     private Double lastLatitude;
 
     private Double lastLongitude;
+
+    public LatLng getLastLatLng() {
+        return new LatLng(lastLatitude, lastLongitude);
+    }
 
     @OneToMany(fetch = FetchType.LAZY)
     private List<Recommendation> recommendations;
